@@ -344,7 +344,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         y_0 = self.x_zero
         self.x_lsoda[0] = y_0
         # solver = ode(f_ode, jacobian_f).set_integrator('zvode', method='BDF')
-        solver = ode(f_ode, jacobian_f).set_integrator('vode')
+        solver = ode(f_ode).set_integrator('vode')
         solver.set_initial_value(y_0, 0.0)
         # t = self.tau
         # x_lsoda = odeint(f, y_0, t)

@@ -19,7 +19,7 @@
                 dt
                 + \sigma_V S_V I_H dB_t^V,
                 \\
-            d S_H & = \Lambda_H - \beta_H / N_V S_H I_V - \mu_H S_H
+            d S_H & = N_h \mu_h  - \beta_H / N_V S_H I_V - \mu_H S_H
             d I_H &=
                 \left [
                     \beta_H / N_V S_H I_V - \mu_H I_H
@@ -96,11 +96,12 @@ class StochasticVectorHostDynamics(object):
         print "\t host_upper_bound:\t", self.host_upper_bound
         return np.array([deterministic_r_zero, stochastic_r_zero])
 
-    def set_parameters_stochastic_hiv_dynamics(self, mu_v, beta_v, lambda_v,
-                                               mu_h, beta_h, lambda_h, sigma_v,
-                                               sigma_h, x_zero):
+    def set_parameters_stochastic_vector_host_dynamics(self, mu_v, beta_v,
+                                                       lambda_v, mu_h, beta_h,
+                                                       lambda_h, sigma_v,
+                                                       sigma_h, x_zero):
         """
-            Set parameters of SDE Duffin Van Der Pol.
+            Stochastic vector host parameters settings
         """
         self.mu_v = mu_v
         self.beta_v = beta_v

@@ -7,6 +7,7 @@ import os
 import cPickle as Pickle
 from stochastic_vector_host_numerics import \
     NumericsStochasticVectorHostDynamics
+
 from matplotlib import rcParams
 
 # Stencil parameters
@@ -23,12 +24,12 @@ sigma_v = 0.9  # Vector noise intensity
 sigma_h = 0.9  # Host noise intensity
 lambda_h = 114.286  # Whole host population
 lambda_v = 21000.0  # Vector birth rate
-beta_v = 0.35  # Host to vector transmission rate
-beta_h = 0.30  # Vector to host transmission rate
+beta_v = 0.00003900042152404787  # Host to vector transmission rate
+beta_h = 0.00003269533157348633  # Vector to host transmission rate
 mu_v = 2.1  # Vector mortality rate
 mu_h = 0.0142857  # Host mortality rate
 
-x_zero = np.array([4000.0, 60.0, 1500.0, 80.0])
+x_zero = np.array([2000.0, 100.0, 3500.0, 150.0])
 
 if os.path.exists('state.dat'):
     # Restore the previously saved sate
@@ -42,10 +43,13 @@ else:
     np.random.seed(100)
 sto_vector_host = NumericsStochasticVectorHostDynamics()
 sto_vector_host.initialize_mesh(k, p, r, T0, T)
-sto_vector_host.set_parameters_stochastic_hiv_dynamics(mu_v, beta_v, lambda_v,
-                                                       mu_h, beta_h, lambda_h,
-                                                       sigma_v, sigma_h,
-                                                       x_zero)
+sto_vector_host.set_parameters_stochastic_vector_host_dynamics(mu_v, beta_v,
+                                                               lambda_v,
+                                                               mu_h, beta_h,
+                                                               lambda_h,
+                                                               sigma_v,
+                                                               sigma_h,
+                                                               x_zero)
 x_det = sto_vector_host.deterministic_lsoda()
 # xst = sto_vector_host.linear_steklov()
 # x_det = sto_vector_host.deterministic_lsoda()

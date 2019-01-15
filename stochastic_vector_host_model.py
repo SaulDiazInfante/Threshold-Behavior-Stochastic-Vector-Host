@@ -74,10 +74,11 @@ class StochasticVectorHostDynamics(object):
         sigma_v = self.sigma_v
         sigma_h = self.sigma_h
         n_v = lambda_v / mu_v
-        deterministic_r_zero = np.sqrt((beta_v * beta_h) / (mu_v * mu_h))
+        deterministic_r_zero = np.sqrt((beta_v * beta_h * n_v * n_h)
+                                       / (mu_v * mu_h))
         stochastic_r_zero = deterministic_r_zero - \
                             0.5 * ((sigma_v * lambda_v / mu_v) ** 2 + (
-                sigma_h * n_h) ** 2)
+                    sigma_h * n_h) ** 2)
         self.deterministic_r_zero = deterministic_r_zero
         self.stochastic_r_zero = stochastic_r_zero
 
@@ -96,9 +97,10 @@ class StochasticVectorHostDynamics(object):
         print "\t host_upper_bound:\t", self.host_upper_bound
         return np.array([deterministic_r_zero, stochastic_r_zero])
 
-    def set_parameters_stochastic_hiv_dynamics(self, mu_v, beta_v, lambda_v,
-                                               mu_h, beta_h, lambda_h, sigma_v,
-                                               sigma_h, x_zero):
+    def set_parameters_stochastic_vector_host_dynamics(self, mu_v, beta_v,
+                                                       lambda_v, mu_h, beta_h,
+                                                       lambda_h, sigma_v,
+                                                       sigma_h, x_zero):
         """
             Set parameters of SDE Duffin Van Der Pol.
         """
@@ -132,11 +134,11 @@ class StochasticVectorHostDynamics(object):
         n_v = s_v + i_v
         n_h = s_h + i_h
 
-        x1 = lambda_v - beta_v * s_v * i_h / n_h - mu_v * s_v
-        x2 = beta_v * s_v * i_h / n_h - mu_v * i_v
-        x3 = lambda_h - beta_h * s_h * i_v / n_v - mu_h * s_h
-        # x3 = mu_h * n_h - beta_h * s_h * i_v / n_v - mu_h * s_h
-        x4 = beta_h * s_h * i_v / n_v - mu_h * i_h
+        x1 = lambda_v - beta_v * s_v * i_h - mu_v * s_v
+        x2 = beta_v * s_v * i_h - mu_v * i_v
+        # x3 = lambda_h - beta_h * s_h * i_v / n_v - mu_h * s_h
+        x3 = mu_h * n_h - beta_h * s_h * i_v - mu_h * s_h
+        x4 = beta_h * s_h * i_v - mu_h * i_h
 
         r = np.array([[x1], [x2], [x3], [x4]])
         r = r.reshape(4, )
@@ -146,6 +148,8 @@ class StochasticVectorHostDynamics(object):
         """
             The diffusion term.
         """
+        n_v = self.lambda_v / self.mu_v
+        n_h = self.lambda_h / self.mu_h
         sigma_v = self.sigma_v
         sigma_h = self.sigma_h
 
@@ -159,7 +163,7 @@ class StochasticVectorHostDynamics(object):
 
         x1 = - sigma_v * s_v * i_h / n_h
         x2 = sigma_v * s_v * i_h / n_h
-        x3 = -sigma_h * s_h * i_v / n_v
+        x3 = - sigma_h * s_h * i_v / n_v
         x4 = sigma_h * s_h * i_v / n_v
 
         bb = np.zeros([4, 4], dtype=np.float128)
