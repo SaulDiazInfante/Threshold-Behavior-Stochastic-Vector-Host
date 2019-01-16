@@ -70,7 +70,7 @@ class StochasticVectorHostDynamics(object):
         lambda_h = self.lambda_h
         mu_h = self.mu_h
         beta_h = self.beta_h
-        n_h = lambda_h / mu_h
+        n_h = self.x_zero[2] + self.x_zero[3]
         sigma_v = self.sigma_v
         sigma_h = self.sigma_h
         n_v = lambda_v / mu_v
@@ -89,6 +89,7 @@ class StochasticVectorHostDynamics(object):
         self.noise_intensity_test = aux_3 > self.noise_extinction_condition
         self.vector_upper_bound = n_v
         self.host_upper_bound = n_h
+        self.r_zer0_det = deterministic_r_zero
 
         print"\n"
         print "\t noise conditions:\t", aux_1, aux_2
@@ -131,12 +132,11 @@ class StochasticVectorHostDynamics(object):
         mu_h = self.mu_h
         beta_h = self.beta_h
 
-        n_v = s_v + i_v
+        n_v = self.lambda_v / self.mu_v
         n_h = s_h + i_h
 
         x1 = lambda_v - beta_v * s_v * i_h - mu_v * s_v
         x2 = beta_v * s_v * i_h - mu_v * i_v
-        # x3 = lambda_h - beta_h * s_h * i_v / n_v - mu_h * s_h
         x3 = mu_h * n_h - beta_h * s_h * i_v - mu_h * s_h
         x4 = beta_h * s_h * i_v - mu_h * i_h
 
@@ -149,7 +149,6 @@ class StochasticVectorHostDynamics(object):
             The diffusion term.
         """
         n_v = self.lambda_v / self.mu_v
-        n_h = self.lambda_h / self.mu_h
         sigma_v = self.sigma_v
         sigma_h = self.sigma_h
 
@@ -158,11 +157,8 @@ class StochasticVectorHostDynamics(object):
         s_h = x_in[2]
         i_h = x_in[3]
 
-        n_v = s_v + i_v
-        n_h = s_h + i_h
-
-        x1 = - sigma_v * s_v * i_h / n_h
-        x2 = sigma_v * s_v * i_h / n_h
+        x1 = - sigma_v * s_v * i_h / n_v
+        x2 = sigma_v * s_v * i_h / n_v
         x3 = - sigma_h * s_h * i_v / n_v
         x4 = sigma_h * s_h * i_v / n_v
 
@@ -176,6 +172,7 @@ class StochasticVectorHostDynamics(object):
     def b_prime(self, x_in):
         sigma_v = self.sigma_v
         sigma_h = self.sigma_h
+        n_v = self.lambda_v / self.mu_v
         b = self.b(x_in)
 
         s_v = x_in[0]
@@ -183,10 +180,7 @@ class StochasticVectorHostDynamics(object):
         s_h = x_in[2]
         i_h = x_in[3]
 
-        n_v = s_v + i_v
-        n_h = s_h + i_h
-
-        x1 = - sigma_v * i_h / n_h
+        x1 = - sigma_v * i_h / n_v
         x3 = - sigma_h * i_v / n_v
         bp = np.zeros([4, 4], dtype=np.float128)
         bp[0, 0] = x1

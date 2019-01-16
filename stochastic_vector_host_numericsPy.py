@@ -42,7 +42,7 @@ sto_vector_host.set_parameters_stochastic_vector_host_dynamics(mu_v, beta_v,
                                                                x_zero)
 x_det = sto_vector_host.deterministic_lsoda()
 # x_det = sto_vector_host.deterministic_linear_steklov()
-xst = sto_vector_host.em()
+xst = sto_vector_host.linear_steklov()
 
 
 t = sto_vector_host.t
@@ -50,7 +50,7 @@ tk = sto_vector_host.dt * sto_vector_host.tau
 
 r_zero = sto_vector_host.r_zero()
 det_vector_cl = x_det[:, 0] + x_det[:, 1]
-sto_vectot_cl = xst[:, 0] + xst[:, 1]
+sto_vector_cl = xst[:, 0] + xst[:, 1]
 print "======================================================================="
 print "\n"
 print "\r R_D:= ", r_zero[0]
@@ -175,7 +175,7 @@ ax2.plot(tk, xst[:, 1],
          mec='#696969',
          label='sto'
          )
-ax3.plot(tk, sto_vectot_cl,
+ax3.plot(tk, sto_vector_cl,
          color='#696969',
          marker='.',
          alpha=0.4,

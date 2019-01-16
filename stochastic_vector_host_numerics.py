@@ -199,9 +199,22 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             self.w_inc_2 = np.sum(self.d_w_2[rr * j:rr * (j + 1)])
             self.w_inc = np.array([[self.w_inc_1], [self.w_inc_1],
                                    [self.w_inc_2], [self.w_inc_2]])
+            #
+            xj = self.x_em[j]
+            aj = self.a(self.x_em[j])
             diffusion = np.dot(self.b(self.x_em[j]), self.w_inc).reshape(4, )
-            increment = self.x_em[j] + d_op_t * self.a(self.x_em[j]) \
-                        + diffusion
+            increment = xj + d_op_t * aj + diffusion
+
+            sign_em = np.sign(increment)
+            sign_em = (sign_em < 0)
+            sign_em_vector = sign_em[0: 2]
+            sign_em_host = sign_em[2: 4]
+            if sign_em_vector[1]:
+                increment[0: 2] = xj[0: 2] + d_op_t * aj[0: 2] \
+                                  - diffusion[0: 2]
+            if sign_em_host[1]:
+                increment[2: 4] = xj[2: 4] + d_op_t * aj[2: 4] \
+                                  - diffusion[2: 4]
             self.x_em[j + 1] = increment
         xem = self.x_em
         return xem
@@ -227,9 +240,22 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             diffusion = np.dot(self.b(self.x_ml[j]), self.w_inc).reshape(4, )
             milstein_correction = 0.5 * np.dot(self.b_prime(self.x_ml[j]),
                                                w_inc_milstein).reshape(4, )
-            increment = self.x_ml[j] + d_op_t * self.a(self.x_ml[j]) \
-                        + diffusion + milstein_correction
-            self.x_ml[j + 1] = increment
+            drift = self.x_ml[j] + d_op_t * self.a(self.x_ml[j])
+            increment = drift + diffusion + milstein_correction
+            # conservative law improvement
+            sign_mls = np.sign(increment)
+            sign_mls = (sign_mls < 0)
+            sign_mls_vector = sign_mls[0: 2]
+            sign_mls_host = sign_mls[2: 4]
+            if any(sign_mls_vector):
+                # increment[0: 2] = drift[0: 2] - diffusion[0: 2] \
+                #                  + milstein_correction[0: 2]
+                increment[0: 2] = [0.0, 0.0]
+            if any(sign_mls_host):
+                # increment[2: 4] = drift[2: 4] - diffusion[2: 4] \
+                #                  + milstein_correction[2: 4]
+                increment[2: 4] = [0.0, 0.0]
+            self.x_ml[j + 1] = np.reshape(increment, 4)
         xml = self.x_ml
         return xml
 
@@ -372,7 +398,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             if np.isclose(ai, eps) or np.isclose(np.exp(ai * h), 1.0):
                 phi_x = bi * h
             else:
-                phi_x = (h * np.exp(ai * h) * bi - h * bi) * (ai ** (-1))
+                phi_x = (np.exp(ai * h) - 1.0) * ai ** (-1.0) * bi
             return phi_x
 
         for j in np.arange(ll):
@@ -385,20 +411,20 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             zj = self.x_stk[j, 2]
             wj = self.x_stk[j, 3]
 
-            a1 = - (beta_v * wj / (zj + wj) + mu_v)
+            a1 = - (beta_v * wj + mu_v)
             b1 = lambda_v
             x = np.exp(h * a1) * xj + phi(a1, b1)
 
             a2 = - mu_v
-            b2 = beta_v * xj * wj / (zj + wj)
+            b2 = beta_v * xj * wj
             y = np.exp(a2 * h) * yj + phi(a2, b2)
 
-            a3 = - (beta_h * yj / (xj + yj) + mu_h)
-            b3 = lambda_h
+            a3 = - beta_h * yj
+            b3 = mu_h * wj
             z = np.exp(a3 * h) * zj + phi(a3, b3)
 
             a4 = - mu_h
-            b4 = beta_h * zj * yj / (xj + yj)
+            b4 = beta_h * zj * yj
             w = np.exp(a4 * h) * wj + phi(a4, b4)
 
             drift_increment = np.array([[x], [y], [z], [w]])
@@ -447,20 +473,20 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             zj = self.x_det_stk[j, 2]
             wj = self.x_det_stk[j, 3]
 
-            a1 = - (beta_v * wj / (zj + wj) + mu_v)
+            a1 = - (beta_v * wj + mu_v)
             b1 = lambda_v
             x = np.exp(h * a1) * xj + phi(a1, b1)
 
             a2 = - mu_v
-            b2 = beta_v * xj * wj / (zj + wj)
+            b2 = beta_v * xj * wj
             y = np.exp(a2 * h) * yj + phi(a2, b2)
 
-            a3 = - (beta_h * yj / (xj + yj) + mu_h)
-            b3 = lambda_h
+            a3 = - (beta_h * yj + mu_h)
+            b3 = mu_h * wj
             z = np.exp(a3 * h) * zj + phi(a3, b3)
 
             a4 = - mu_h
-            b4 = beta_h * zj * yj / (xj + yj)
+            b4 = beta_h * zj * yj
             w = np.exp(a4 * h) * wj + phi(a4, b4)
 
             stk = np.array([x, y, z, w])
