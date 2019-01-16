@@ -29,7 +29,7 @@
 from stochastic_vector_host_model import StochasticVectorHostDynamics
 import numpy as np
 from scipy.optimize import fsolve
-from scipy.integrate import odeint
+# from scipy.integrate import odeint
 from scipy.integrate import ode
 
 
@@ -82,17 +82,8 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         #
         # Arrays for solutions
 
-        self.x_em = np.zeros([self.ll + 1, 4], dtype=np.float128)
-        self.x_em = np.zeros([self.ll + 1, 4], dtype=np.float128)
-        self.x_ml = np.zeros([self.ll + 1, 4], dtype=np.float128)
-        self.x_stk = np.zeros([self.ll + 1, 4], dtype=np.float128)
-        self.x_det_stk = np.zeros([self.ll + 1, 4], dtype=np.float128)
-        self.x_lsoda = np.zeros([self.ll + 1, 4], dtype=np.float128)
-        self.x_bem = np.zeros([self.ll + 1, 4], dtype=np.float128)
-        self.x_tem = np.zeros([self.ll + 1, 4], dtype=np.float128)
-        self.x_eem = np.zeros([self.n + 2, 4])
-        self.x_tem_sab = np.zeros([self.ll + 1, 4], dtype=np.float128)
-
+        self.x_det = np.zeros([self.ll + 1, 4], dtype=np.float128)
+        self.x_sto = np.zeros([self.ll + 1, 4], dtype=np.float128)
         super(NumericsStochasticVectorHostDynamics, self).__init__()
 
     def initialize_mesh(self, k, p, r, t_0, t_f):
@@ -139,15 +130,8 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         self.w_2 = np.concatenate(([0], self.w_2))
 
         # Arrays for solutions
-        self.x_em = np.zeros([self.ll + 1, 4], dtype=np.float128)
-        self.x_em = np.zeros([self.ll + 1, 4], dtype=np.float128)
-        self.x_stk = np.zeros([self.ll + 1, 4], dtype=np.float128)
-        self.x_det_stk = np.zeros([self.ll + 1, 4], dtype=np.float128)
-        self.x_lsoda = np.zeros([self.ll + 1, 4], dtype=np.float128)
-        self.x_bem = np.zeros([self.ll + 1, 4], dtype=np.float128)
-        self.x_tem = np.zeros([self.ll + 1, 4], dtype=np.float128)
-        self.x_eem = np.zeros([self.n + 2, 4])
-        self.x_tem_sab = np.zeros([self.ll + 1, 4], dtype=np.float128)
+        self.x_det = np.zeros([self.ll + 1, 4], dtype=np.float128)
+        self.x_sto = np.zeros([self.ll + 1, 4], dtype=np.float128)
 
     def ai(self, x, xj, h):
         a = self.a(x)
@@ -159,7 +143,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
     #
 
     def bem(self, flag=0):
-        # %  Preallocate x_em for efficiency.
+        # %  Preallocate x_sto for efficiency.
         h = self.d_op_t
         ll = self.ll
         rj = self.rr
@@ -168,22 +152,22 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             h = self.dt
             ll = self.n
             rj = 1
-            self.x_bem = np.zeros([ll + 1, 3])
+            self.x_sto = np.zeros([ll + 1, 3])
         #
-        self.x_bem[0] = self.x_zero
+        self.x_sto[0] = self.x_zero
         for j in np.arange(ll):
-            xj = self.x_bem[j]
+            xj = self.x_sto[j]
             self.w_inc_1 = np.sum(self.d_w_1[rj * j:rj * (j + 1)])
             self.w_inc_2 = np.sum(self.d_w_2[rj * j:rj * (j + 1)])
             self.w_inc = np.array([[self.w_inc_1], [self.w_inc_1],
                                    [self.w_inc_2], [self.w_inc_2]])
             increment = fsolve(self.ai, xj, args=(xj, h))
-            self.x_bem[j + 1] = increment
-        xbem = self.x_bem
+            self.x_sto[j + 1] = increment
+        xbem = self.x_sto
         return xbem
 
     def em(self, flag=0):
-        # %  Preallocate x_em for efficiency.
+        # %  Preallocate x_sto for efficiency.
         d_op_t = self.d_op_t
         ll = self.ll
         rr = self.rr
@@ -192,17 +176,17 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             d_op_t = self.dt
             ll = self.n
             rr = 1
-        self.x_em = np.zeros([ll + 1, 4])
-        self.x_em[0] = self.x_zero
+        self.x_sto = np.zeros([ll + 1, 4])
+        self.x_sto[0] = self.x_zero
         for j in np.arange(ll):
             self.w_inc_1 = np.sum(self.d_w_1[rr * j:rr * (j + 1)])
             self.w_inc_2 = np.sum(self.d_w_2[rr * j:rr * (j + 1)])
             self.w_inc = np.array([[self.w_inc_1], [self.w_inc_1],
                                    [self.w_inc_2], [self.w_inc_2]])
             #
-            xj = self.x_em[j]
-            aj = self.a(self.x_em[j])
-            diffusion = np.dot(self.b(self.x_em[j]), self.w_inc).reshape(4, )
+            xj = self.x_sto[j]
+            aj = self.a(self.x_sto[j])
+            diffusion = np.dot(self.b(self.x_sto[j]), self.w_inc).reshape(4, )
             increment = xj + d_op_t * aj + diffusion
 
             sign_em = np.sign(increment)
@@ -215,12 +199,12 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             if sign_em_host[1]:
                 increment[2: 4] = xj[2: 4] + d_op_t * aj[2: 4] \
                                   - diffusion[2: 4]
-            self.x_em[j + 1] = increment
-        xem = self.x_em
+            self.x_sto[j + 1] = increment
+        xem = self.x_sto
         return xem
 
     def milstein(self, flag=0):
-        # %  Preallocate x_em for efficiency.
+        # %  Preallocate x_sto for efficiency.
         d_op_t = self.d_op_t
         ll = self.ll
         rr = self.rr
@@ -229,18 +213,18 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             d_op_t = self.dt
             ll = self.n
             rr = 1
-        self.x_ml = np.zeros([ll + 1, 4])
-        self.x_ml[0] = self.x_zero
+        self.x_sto = np.zeros([ll + 1, 4])
+        self.x_sto[0] = self.x_zero
         for j in np.arange(ll):
             self.w_inc_1 = np.sum(self.d_w_1[rr * j:rr * (j + 1)])
             self.w_inc_2 = np.sum(self.d_w_2[rr * j:rr * (j + 1)])
             self.w_inc = np.array([[self.w_inc_1], [self.w_inc_1],
                                    [self.w_inc_2], [self.w_inc_2]])
             w_inc_milstein = self.w_inc ** 2 - d_op_t * np.ones([4, 1])
-            diffusion = np.dot(self.b(self.x_ml[j]), self.w_inc).reshape(4, )
-            milstein_correction = 0.5 * np.dot(self.b_prime(self.x_ml[j]),
+            diffusion = np.dot(self.b(self.x_sto[j]), self.w_inc).reshape(4, )
+            milstein_correction = 0.5 * np.dot(self.b_prime(self.x_sto[j]),
                                                w_inc_milstein).reshape(4, )
-            drift = self.x_ml[j] + d_op_t * self.a(self.x_ml[j])
+            drift = self.x_sto[j] + d_op_t * self.a(self.x_sto[j])
             increment = drift + diffusion + milstein_correction
             # conservative law improvement
             sign_mls = np.sign(increment)
@@ -255,8 +239,8 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
                 # increment[2: 4] = drift[2: 4] - diffusion[2: 4] \
                 #                  + milstein_correction[2: 4]
                 increment[2: 4] = [0.0, 0.0]
-            self.x_ml[j + 1] = np.reshape(increment, 4)
-        xml = self.x_ml
+            self.x_sto[j + 1] = np.reshape(increment, 4)
+        xml = self.x_sto
         return xml
 
     def tamed_em(self, flag=0):
@@ -268,20 +252,20 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             ll = self.n
             rr = 1
 
-        self.x_tem[0] = self.x_zero
+        self.x_sto[0] = self.x_zero
         for j in np.arange(ll):
             self.w_inc_1 = np.sum(self.d_w_1[rr * j:rr * (j + 1)])
             self.w_inc_2 = np.sum(self.d_w_2[rr * j:rr * (j + 1)])
             self.w_inc = np.array([[self.w_inc_1], [self.w_inc_1],
                                    [self.w_inc_2], [self.w_inc_1]])
-            xj = self.x_tem[j]
+            xj = self.x_sto[j]
             aj = self.a(xj)
             naj = 1 + d_op_t * np.linalg.norm(aj)
             diffusion = np.dot(self.b(xj), self.w_inc).reshape(4, )
             increment = xj + d_op_t / naj * self.a(xj) + diffusion
-            self.x_tem[j + 1] = np.transpose(increment)
-        x_tem = self.x_tem
-        return x_tem
+            self.x_sto[j + 1] = np.transpose(increment)
+        x_sto = self.x_sto
+        return x_sto
 
     def tamed_em_sabanis(self, flag=0):
         d_op_t = self.d_op_t
@@ -294,15 +278,15 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             d_op_t = self.dt
             ll = self.n
             rr = 1
-        self.x_tem_sab = np.zeros([ll + 1, 4])
-        self.x_tem_sab[0] = self.x_zero
+        self.x_sto = np.zeros([ll + 1, 4])
+        self.x_sto[0] = self.x_zero
         for j in np.arange(ll):
             self.w_inc_1 = np.sum(self.d_w_1[rr * j:rr * (j + 1)])
             self.w_inc_2 = np.sum(self.d_w_2[rr * j:rr * (j + 1)])
             self.w_inc = np.array([[self.w_inc_1], [self.w_inc_1],
                                    [self.w_inc_2], [self.w_inc_1]])
 
-            xj = self.x_tem_sab[j]
+            xj = self.x_sto[j]
             aj = self.a(xj)
             bj = self.b(xj)
             n_alpha_tamed_1 = 1 + ((j + 1) ** (-alpha)) * (
@@ -313,8 +297,8 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             diffusion = np.dot(self.b(xj), self.w_inc).reshape(4, )
             increment = xj + d_op_t / n_alpha_tamed_1 * aj \
                         + diffusion / n_alpha_tamed_1
-            self.x_tem_sab[j + 1] = np.transpose(increment)
-        x_temsab = self.x_tem_sab
+            self.x_sto[j + 1] = np.transpose(increment)
+        x_temsab = self.x_sto
         return x_temsab
 
     def deterministic_lsoda(self):
@@ -368,16 +352,16 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             return jf
 
         y_0 = self.x_zero
-        self.x_lsoda[0] = y_0
+        self.x_det[0] = y_0
         # solver = ode(f_ode, jacobian_f).set_integrator('zvode', method='BDF')
         solver = ode(f_ode).set_integrator('vode')
         solver.set_initial_value(y_0, 0.0)
         # t = self.tau
-        # x_lsoda = odeint(f, y_0, t)
+        # x_det = odeint(f, y_0, t)
         for j in np.arange(self.ll):
-            x_lsoda = solver.integrate(self.tau[j + 1])
-            self.x_lsoda[j + 1] = x_lsoda
-        return self.x_lsoda
+            x_det = solver.integrate(self.tau[j + 1])
+            self.x_det[j + 1] = x_det
+        return self.x_det
 
     def linear_steklov(self):
         h = self.d_op_t
@@ -392,7 +376,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         mu_h = self.mu_h
 
         eps = np.finfo(float).eps
-        self.x_stk[0] = self.x_zero
+        self.x_sto[0] = self.x_zero
 
         def phi(ai, bi):
             if np.isclose(ai, eps) or np.isclose(np.exp(ai * h), 1.0):
@@ -406,10 +390,10 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             self.w_inc_2 = np.sum(self.d_w_2[rr * j:rr * (j + 1)])
             self.w_inc = np.array([[self.w_inc_1], [self.w_inc_1],
                                    [self.w_inc_2], [self.w_inc_2]])
-            xj = self.x_stk[j, 0]
-            yj = self.x_stk[j, 1]
-            zj = self.x_stk[j, 2]
-            wj = self.x_stk[j, 3]
+            xj = self.x_sto[j, 0]
+            yj = self.x_sto[j, 1]
+            zj = self.x_sto[j, 2]
+            wj = self.x_sto[j, 3]
 
             a1 = - (beta_v * wj + mu_v)
             b1 = lambda_v
@@ -428,7 +412,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             w = np.exp(a4 * h) * wj + phi(a4, b4)
 
             drift_increment = np.array([[x], [y], [z], [w]])
-            winner_increment = np.dot(self.b(self.x_stk[j]), self.w_inc)
+            winner_increment = np.dot(self.b(self.x_sto[j]), self.w_inc)
             stk = drift_increment + winner_increment
 
             # conservative law improvement
@@ -440,9 +424,9 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
                 stk[0: 2] = drift_increment[0: 2] - winner_increment[0: 2]
             if any(sign_stk_host):
                 stk[2: 4] = drift_increment[2: 4] - winner_increment[2: 4]
-            self.x_stk[j + 1] = np.reshape(stk, 4)
-        x_stk = self.x_stk
-        return x_stk
+            self.x_sto[j + 1] = np.reshape(stk, 4)
+        x_sto = self.x_sto
+        return x_sto
 
     def deterministic_linear_steklov(self):
         h = self.d_op_t
@@ -457,21 +441,21 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         mu_h = self.mu_h
 
         eps = np.finfo(np.float64).eps
-        self.x_det_stk[0] = self.x_zero
+        self.x_det[0] = self.x_zero
 
         def phi(ai, bi):
             if np.isclose(ai, eps) or np.isclose(np.exp(ai * h), 1.0):
                 phi_x = bi * h
                 # phi_x = (h * np.exp(ai * h) - h) * bi * (ai ** -1.0)
             else:
-                phi_x = (h * np.exp(ai * h) - h) * bi * (ai ** -1.0)
+                phi_x = (np.exp(ai * h) - 1.0) * ai ** (-1.0) * bi
             return phi_x
 
         for j in np.arange(ll):
-            xj = self.x_det_stk[j, 0]
-            yj = self.x_det_stk[j, 1]
-            zj = self.x_det_stk[j, 2]
-            wj = self.x_det_stk[j, 3]
+            xj = self.x_det[j, 0]
+            yj = self.x_det[j, 1]
+            zj = self.x_det[j, 2]
+            wj = self.x_det[j, 3]
 
             a1 = - (beta_v * wj + mu_v)
             b1 = lambda_v
@@ -481,18 +465,18 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             b2 = beta_v * xj * wj
             y = np.exp(a2 * h) * yj + phi(a2, b2)
 
-            a3 = - (beta_h * yj + mu_h)
+            a3 = - beta_h * yj
             b3 = mu_h * wj
             z = np.exp(a3 * h) * zj + phi(a3, b3)
 
             a4 = - mu_h
             b4 = beta_h * zj * yj
             w = np.exp(a4 * h) * wj + phi(a4, b4)
-
+            
             stk = np.array([x, y, z, w])
-            self.x_det_stk[j + 1, :] = stk[:]
+            self.x_det[j + 1, :] = stk[:]
 
-        x_det_stkm = self.x_det_stk
+        x_det_stkm = self.x_det
         return x_det_stkm
 
     def save_data(self):
@@ -505,17 +489,13 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
 
         def deterministic_data():
             t = self.dt * self.tau
-            ueem1 = self.x_eem[:, 0]
-            ueem2 = self.x_eem[:, 1]
-            ueem3 = self.x_eem[:, 2]
+            u_det1 = self.x_det[:, 0]
+            u_det2 = self.x_det[:, 1]
+            u_det3 = self.x_det[:, 2]
 
-            u_em1 = self.x_em[:, 0]
-            u_em2 = self.x_em[:, 1]
-            u_em3 = self.x_em[:, 2]
-
-            u_stk1 = self.x_stk[:, 0]
-            u_stk2 = self.x_stk[:, 1]
-            u_stk3 = self.x_stk[:, 2]
+            u_sto1 = self.x_sto[:, 0]
+            u_sto2 = self.x_sto[:, 1]
+            u_sto3 = self.x_sto[:, 2]
 
             tag_par = np.array([
                 'k = ',
@@ -571,35 +551,35 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             np.savetxt(name2,
                        np.transpose(
                            (
-                               t, u_em1, u_em2, u_em3,
-                               u_stk1, u_stk2, u_stk3,
+                               t, u_det1, u_det2, u_det3,
+                               u_sto1, u_sto2, u_sto3,
                                )
                            ), fmt='%1.8f', delimiter='\t')
             np.savetxt(name3,
                        np.transpose(
                            (
-                               self.t, ueem1, ueem2, ueem3,
+                               self.t, u_det1, u_det2, u_det3,
                                )
                            ), fmt='%1.8f', delimiter='\t')
 
         def stochastic_data():
             """
             t = self.dt * self.tau
-            ueem1 = self.x_eem[:, 0]
-            ueem2 = self.x_eem[:, 1]
-            ueem3 = self.x_eem[:, 2]
+            u_det1 = self.x_det[:, 0]
+            u_det2 = self.x_det[:, 1]
+            u_det3 = self.x_det[:, 2]
             
-            u_em1 = self.x_em[:, 0]
-            u_em2 = self.x_em[:, 1]
-            u_em3 = self.x_em[:, 2]
+            u_det1 = self.x_sto[:, 0]
+            u_det2 = self.x_sto[:, 1]
+            u_det3 = self.x_sto[:, 2]
             
-            u_stk1 = self.x_stk[:, 0]
-            u_stk2  = self.x_stk[:, 1]
-            u_stk3 = self.x_stk[:, 2]
+            u_sto1 = self.x_sto[:, 0]
+            u_sto2  = self.x_sto[:, 1]
+            u_sto3 = self.x_sto[:, 2]
             
-            u_tem1 = self.x_tem[:, 0]
-            u_tem_2  = self.x_tem[:, 1]
-            u_tem_3 = self.x_tem[:, 2]
+            u_tem1 = self.x_sto[:, 0]
+            u_tem_2  = self.x_sto[:, 1]
+            u_tem_3 = self.x_sto[:, 2]
             """
             tag_par = np.array([
                 'k = ',
@@ -657,14 +637,14 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             np.save(name2,
                 np.transpose(
                     (
-                        t, u_em1, u_em2, u_em3, u_stk1, u_stk2, u_stk3,
+                        t, u_det1, u_det2, u_det3, u_sto1, u_sto2, u_sto3,
                         u_tem1, u_tem_2, u_tem_3
                     )
                 ))
             np.savetxt(name3,
                 np.transpose(
                     (
-                        self.t, ueem1, ueem2, ueem3
+                        self.t, u_det1, u_det2, u_det3
                     )
                 ))
         if self.sigma_v == 0.0:
@@ -673,5 +653,4 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
                 return
         StochasticData()
             """
-
         return
