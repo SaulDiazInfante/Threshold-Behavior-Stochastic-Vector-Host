@@ -8,20 +8,20 @@ import cPickle as Pickle
 from stochastic_vector_host_numerics import \
     NumericsStochasticVectorHostDynamics
 
-from matplotlib import rcParams
+# from matplotlib import rcParams
 
 # Stencil parameters
 
 k = 6
-p = 2
+p = 1
 r = p
 T0 = 0.0
-T = 20
+T = 200
 
 # SDE parameters from literature
 
-sigma_v = 0.9  # Vector noise intensity
-sigma_h = 0.9  # Host noise intensity
+sigma_v = 1.95  # Vector noise intensity
+sigma_h = 1.95  # Host noise intensity
 lambda_h = 114.286  # Whole host population
 lambda_v = 21000.0  # Vector birth rate
 beta_v = 0.00003900042152404787  # Host to vector transmission rate
@@ -29,18 +29,8 @@ beta_h = 0.00003269533157348633  # Vector to host transmission rate
 mu_v = 2.1  # Vector mortality rate
 mu_h = 0.0142857  # Host mortality rate
 
-x_zero = np.array([2000.0, 100.0, 3500.0, 150.0])
+x_zero = np.array([2000.0, 1.0, 3500.0, 150.0])
 
-if os.path.exists('state.dat'):
-    # Restore the previously saved sate
-    print 'Found state.dat, initializing random module'
-    with open('state.dat', 'rb') as f:
-        state = Pickle.load(f)
-        random.setstate(state)
-else:
-    # Use a well-known start state
-    print 'No state.dat, seeding'
-    np.random.seed(100)
 sto_vector_host = NumericsStochasticVectorHostDynamics()
 sto_vector_host.initialize_mesh(k, p, r, T0, T)
 sto_vector_host.set_parameters_stochastic_vector_host_dynamics(mu_v, beta_v,
@@ -51,12 +41,16 @@ sto_vector_host.set_parameters_stochastic_vector_host_dynamics(mu_v, beta_v,
                                                                sigma_h,
                                                                x_zero)
 x_det = sto_vector_host.deterministic_lsoda()
-# xst = sto_vector_host.linear_steklov()
-# x_det = sto_vector_host.deterministic_lsoda()
+# x_det = sto_vector_host.deterministic_linear_steklov()
+xst = sto_vector_host.em()
+
+
 t = sto_vector_host.t
 tk = sto_vector_host.dt * sto_vector_host.tau
 
 r_zero = sto_vector_host.r_zero()
+det_vector_cl = x_det[:, 0] + x_det[:, 1]
+sto_vectot_cl = xst[:, 0] + xst[:, 1]
 print "======================================================================="
 print "\n"
 print "\r R_D:= ", r_zero[0]
@@ -68,6 +62,7 @@ fig2 = plt.figure()
 ax1 = plt.subplot2grid((2, 3), (0, 0))
 ax2 = plt.subplot2grid((2, 3), (0, 1))
 ax3 = plt.subplot2grid((2, 3), (0, 2))
+
 ax4 = plt.subplot2grid((2, 3), (1, 0))
 ax5 = plt.subplot2grid((2, 3), (1, 1))
 ax6 = plt.subplot2grid((2, 3), (1, 2))
@@ -95,7 +90,7 @@ ax2.plot(tk, x_det[:, 1],
          mec='red',
          label=r'Det'
          )
-ax3.plot(tk, x_det[:, 0] + x_det[:, 1],
+ax3.plot(tk, det_vector_cl,
          color='red',
          marker='',
          alpha=1,
@@ -156,7 +151,7 @@ ax1.legend(
     numpoints=1,
     borderaxespad=0.4
     )
-"""
+
 ax1.plot(tk, xst[:, 0],
          color='#696969',
          marker='.',
@@ -174,42 +169,41 @@ ax2.plot(tk, xst[:, 1],
          marker='.',
          alpha=0.4,
          lw=1,
-         ls='',
+         ls='-',
          ms=2,
          mfc='none',
          mec='#696969',
          label='sto'
          )
-ax5.plot(tk, xst[:, 0] + xst[:, 1],
+ax3.plot(tk, sto_vectot_cl,
          color='#696969',
          marker='.',
          alpha=0.4,
          lw=1,
-         ls='',
+         ls='-',
          ms=2,
          mfc='none',
          mec='#696969',
          label='sto'
          )
 
-
-ax3.plot(tk, xst[:, 2],
+ax4.plot(tk, xst[:, 2],
          color='#696969',
          marker='.',
          alpha=0.4,
          lw=1,
-         ls='',
+         ls='-',
          ms=2,
          mfc='none',
          mec='#696969',
          label='sto'
          )
-ax4.plot(tk, xst[:, 3],
+ax5.plot(tk, xst[:, 3],
          color='#696969',
          marker='.',
          alpha=0.4,
          lw=1,
-         ls='',
+         ls='-',
          ms=2,
          mfc='none',
          mec='#696969',
@@ -220,12 +214,11 @@ ax6.plot(tk, xst[:, 2] + xst[:, 3],
          marker='.',
          alpha=0.4,
          lw=1,
-         ls='',
+         ls='-',
          ms=2,
          mfc='none',
          mec='#696969',
          label='sto'
          )
-"""
 plt.tight_layout()
 plt.show()
