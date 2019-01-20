@@ -7,22 +7,23 @@
         \begin{aligned}
             d S_V &=
                 \left [
-                    \Lambda_V - \beta_V S_V I_H - \mu_V S_V
+                    \Lambda_V - \beta_V / N_H S_V I_H - \mu_V S_V
                 \right ] dt
                 - \sigma_V S_V I_H dB_t^V,
                 \\
             d I_V &=
                 \left [
-                   \beta_V S_V I_H - \mu_V I_V
+                   \beta_V / N_H S_V I_H - \mu_V I_V
                 \right ]
                 dt
                 + \sigma_V S_V I_H dB_t^V,
                 \\
+            d S_H & = \Lambda_H - \beta_H / N_V S_H I_V - \mu_H S_H
             d I_H &=
                 \left [
-                    \beta_H (N_H - I_H) I_V - \mu_H I_H
+                    \beta_H / N_V S_H I_V - \mu_H I_H
                 \right ] dt
-                + \sigma_H (N_H - I_H) I_V d B^H_t .
+                + \sigma_H S_H I_V d B^H_t .
        \end{aligned}
     \end{equation}
 """
@@ -487,170 +488,68 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
 
         # t=self.t[0:-1:self.rr].reshape([self.t[0:-1:self.rr].shape[0],1])
 
-        def deterministic_data():
-            t = self.dt * self.tau
-            u_det1 = self.x_det[:, 0]
-            u_det2 = self.x_det[:, 1]
-            u_det3 = self.x_det[:, 2]
+        t = self.dt * self.tau
+        u_det1 = self.x_det[:, 0]
+        u_det2 = self.x_det[:, 1]
+        u_det3 = self.x_det[:, 2]
+        u_det4 = self.x_det[:, 3]
 
-            u_sto1 = self.x_sto[:, 0]
-            u_sto2 = self.x_sto[:, 1]
-            u_sto3 = self.x_sto[:, 2]
+        u_sto1 = self.x_sto[:, 0]
+        u_sto2 = self.x_sto[:, 1]
+        u_sto3 = self.x_sto[:, 2]
+        u_sto4 = self.x_sto[:, 3]
 
-            tag_par = np.array([
-                'k = ',
-                'r = ',
-                't_0 = ',
-                'n = ',
-                'rr = ',
-                't_f = ',
-                'dt = ',
-                'd_op_t = ',
-                'll = ',
-                'mu_v = ',
-                'beta_v = ',
-                'lambda =',
-                'mu_h = ',
-                'beta_h = ',
-                'N0 = ',
-                'sigma_v = ',
-                'sigma_h = ',
-                'x01 = ',
-                'x02 = ',
-                'x03 = ',
-                ])
-            parameter_values = np.array([
-                self.k,
-                self.r,
-                self.t_0,
-                self.n,
-                self.rr,
-                self.t_f,
-                self.dt,
-                self.d_op_t,
-                self.ll,
-                self.mu_v,
-                self.beta_v,
-                self.lambda_v,
-                self.mu_h,
-                self.beta_h,
-                self.n,
-                self.sigma_v,
-                self.sigma_h,
-                self.x_zero[0, 0],
-                self.x_zero[0, 1],
-                self.x_zero[0, 2]
-                ])
-            str_prefix = str(self.d_op_t)
-            name1 = 'DetParameters' + str_prefix + '.txt'
-            name2 = 'DetSolution' + str_prefix + '.txt'
-            name3 = 'DetRefSolution' + str(self.dt) + '.txt'
+        tag_par = np.array([
+            'k = ',
+            'r = ',
+            't_0 = ',
+            'rr = ',
+            't_f = ',
+            'dt = ',
+            'd_op_t = ',
+            'll = ',
+            'mu_v = ',
+            'beta_v = ',
+            'lambda =',
+            'mu_h = ',
+            'beta_h = ',
+            'sigma_v = ',
+            'sigma_h = ',
+            'Sv0 = ',
+            'Iv0 = ',
+            'SH0 = ',
+            'VH0 = '
+            ])
+        parameter_values = np.array([
+            self.k,
+            self.r,
+            self.t_0,
+            self.rr,
+            self.t_f,
+            self.dt,
+            self.d_op_t,
+            self.ll,
+            self.mu_v,
+            self.beta_v,
+            self.lambda_v,
+            self.mu_h,
+            self.beta_h,
+            self.sigma_v,
+            self.sigma_h,
+            self.x_zero[0, 0],
+            self.x_zero[0, 1],
+            self.x_zero[0, 2],
+            self.x_zero[0, 3]
+            ])
+        str_prefix = str(self.d_op_t)
+        name1 = 'parameters' + str_prefix + '.txt'
+        name2 = 'det_solution' + str_prefix + '.txt'
+        name3 = 'sto_solution' + str(self.dt) + '.txt'
 
-            parameters = np.column_stack((tag_par, parameter_values))
-            np.savetxt(name1, parameters, delimiter=" ", fmt="%s")
-            np.savetxt(name2,
-                       np.transpose(
-                           (
-                               t, u_det1, u_det2, u_det3,
-                               u_sto1, u_sto2, u_sto3,
-                               )
-                           ), fmt='%1.8f', delimiter='\t')
-            np.savetxt(name3,
-                       np.transpose(
-                           (
-                               self.t, u_det1, u_det2, u_det3,
-                               )
-                           ), fmt='%1.8f', delimiter='\t')
-
-        def stochastic_data():
-            """
-            t = self.dt * self.tau
-            u_det1 = self.x_det[:, 0]
-            u_det2 = self.x_det[:, 1]
-            u_det3 = self.x_det[:, 2]
-            
-            u_det1 = self.x_sto[:, 0]
-            u_det2 = self.x_sto[:, 1]
-            u_det3 = self.x_sto[:, 2]
-            
-            u_sto1 = self.x_sto[:, 0]
-            u_sto2  = self.x_sto[:, 1]
-            u_sto3 = self.x_sto[:, 2]
-            
-            u_tem1 = self.x_sto[:, 0]
-            u_tem_2  = self.x_sto[:, 1]
-            u_tem_3 = self.x_sto[:, 2]
-            """
-            tag_par = np.array([
-                'k = ',
-                'r = ',
-                't_0 = ',
-                'n = ',
-                'rr = ',
-                't_f = ',
-                'dt = ',
-                'd_op_t = ',
-                'll = ',
-                'mu_v = ',
-                'beta_v = ',
-                'lambda =',
-                'mu_h = ',
-                'beta_h = ',
-                'N0 = ',
-                'sigma_v = ',
-                'sigma_h = ',
-                'x01 = ',
-                'x02 = ',
-                'x03 = ',
-                ])
-            parameter_values = np.array([
-                self.k,
-                self.r,
-                self.t_0,
-                self.n,
-                self.rr,
-                self.t_f,
-                self.dt,
-                self.d_op_t,
-                self.ll,
-                self.mu_v,
-                self.beta_v,
-                self.lambda_v,
-                self.mu_h,
-                self.beta_h,
-                self.n,
-                self.sigma_v,
-                self.sigma_h,
-                self.x_zero[0, 0],
-                self.x_zero[0, 1],
-                self.x_zero[0, 2]
-                ])
-            str_prefix = str(self.d_op_t)
-            name1 = 'sto_parameters' + str_prefix + '.txt'
-            """
-            name2 = 'sto_solution' + str_prefix + '.txt'
-            name3 = 'sto_ref_solution' + str(self.dt) + '.txt'
-            """
-            parameters = np.column_stack((tag_par, parameter_values))
-            np.savetxt(name1, parameters, delimiter=" ", fmt="%s")
-            """
-            np.save(name2,
-                np.transpose(
-                    (
-                        t, u_det1, u_det2, u_det3, u_sto1, u_sto2, u_sto3,
-                        u_tem1, u_tem_2, u_tem_3
-                    )
-                ))
-            np.savetxt(name3,
-                np.transpose(
-                    (
-                        self.t, u_det1, u_det2, u_det3
-                    )
-                ))
-        if self.sigma_v == 0.0:
-            if self.sigma_h == 0.0:
-                DeterministicData()
-                return
-        StochasticData()
-            """
+        parameters = np.column_stack((tag_par, parameter_values))
+        np.savetxt(name1, parameters, delimiter=" ", fmt="%s")
+        data_det = np.transpose((t, u_det1, u_det2, u_det3, u_det4))
+        data_sto = np.transpose((self.t, u_sto1, u_sto2, u_sto3, u_sto4))
+        np.savetxt(name2, data_det, fmt='%1.8f', delimiter='\t')
+        np.savetxt(name3, data_sto, fmt='%1.8f', delimiter='\t')
         return
