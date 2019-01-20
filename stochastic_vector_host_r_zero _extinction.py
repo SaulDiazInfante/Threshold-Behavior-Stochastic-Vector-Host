@@ -7,10 +7,10 @@ k = 6
 p = 1
 r = p
 T0 = 0.0
-T = 200
+T = 400
 
 sigma_v = .68  # Vector noise intensity
-sigma_h = .68  # Host noise intensity
+sigma_h = .0844  # Host noise intensity
 lambda_h = 114.286  # Whole host population
 lambda_v = 21000.0  # Vector birth rate
 # beta_v = 0.00003900042152404787  # Host to vector transmission rate
@@ -22,27 +22,28 @@ n_v = lambda_v / mu_v
 n_h = x_zero[2] + x_zero[3]
 beta_v = mu_v / n_v
 beta_h = mu_h / n_h
-mu_v = 2.1 - 0.001
+mu_v = 2.1 - 0.2
 
 svh = NumericsStochasticVectorHostDynamics()
 svh.initialize_mesh(k, p, r, T0, T)
 svh.set_parameters_stochastic_vector_host_dynamics(mu_v, beta_v, lambda_v,
                                                    mu_h, beta_h, lambda_h,
                                                    sigma_v, sigma_h, x_zero)
-x_det = svh.deterministic_linear_steklov()
-xst = svh.linear_steklov()
+r_zero = svh.r_zero()
 
 t = svh.t
 tk = svh.dt * svh.tau
 
-r_zero = svh.r_zero()
-det_vector_cl = x_det[:, 0] + x_det[:, 1]
-sto_vector_cl = xst[:, 0] + xst[:, 1]
 print "======================================================================="
 print "\n"
 print "\r R_D:= ", r_zero[0]
 print "\r R_S:= ", r_zero[1]
 svh.extinction_conditions()
+
+x_det = svh.deterministic_linear_steklov()
+xst = svh.linear_steklov()
+det_vector_cl = x_det[:, 0] + x_det[:, 1]
+sto_vector_cl = xst[:, 0] + xst[:, 1]
 
 """
     Auxiliary plot
@@ -220,3 +221,4 @@ ax_ih.legend(
     )
 plt.tight_layout()
 plt.show()
+
