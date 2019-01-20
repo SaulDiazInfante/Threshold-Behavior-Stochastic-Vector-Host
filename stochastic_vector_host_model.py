@@ -74,11 +74,9 @@ class StochasticVectorHostDynamics(object):
         sigma_v = self.sigma_v
         sigma_h = self.sigma_h
         n_v = lambda_v / mu_v
-        deterministic_r_zero = np.sqrt((beta_v * beta_h * n_v * n_h)
-                                       / (mu_v * mu_h))
-        stochastic_r_zero = deterministic_r_zero - \
-                            0.5 * ((sigma_v * lambda_v / mu_v) ** 2 + (
-                    sigma_h * n_h) ** 2)
+        deterministic_r_zero = (beta_v * beta_h * n_v * n_h) / (mu_v * mu_h)
+        stochastic_r_zero = deterministic_r_zero - 0.5 * (sigma_v ** 2
+                                                          + sigma_h ** 2)
         self.deterministic_r_zero = deterministic_r_zero
         self.stochastic_r_zero = stochastic_r_zero
 
@@ -149,6 +147,7 @@ class StochasticVectorHostDynamics(object):
             The diffusion term.
         """
         n_v = self.lambda_v / self.mu_v
+        n_h = self.x_zero[2] + self.x_zero[3]
         sigma_v = self.sigma_v
         sigma_h = self.sigma_h
 
@@ -159,8 +158,8 @@ class StochasticVectorHostDynamics(object):
 
         x1 = - sigma_v * s_v * i_h / n_v
         x2 = sigma_v * s_v * i_h / n_v
-        x3 = - sigma_h * s_h * i_v / n_v
-        x4 = sigma_h * s_h * i_v / n_v
+        x3 = - sigma_h * s_h * i_v / n_h
+        x4 = sigma_h * s_h * i_v / n_h
 
         bb = np.zeros([4, 4], dtype=np.float128)
         bb[0, 0] = x1
@@ -173,15 +172,14 @@ class StochasticVectorHostDynamics(object):
         sigma_v = self.sigma_v
         sigma_h = self.sigma_h
         n_v = self.lambda_v / self.mu_v
+        n_h = self.x_zero[2] + self.x_zero[3]
         b = self.b(x_in)
 
-        s_v = x_in[0]
         i_v = x_in[1]
-        s_h = x_in[2]
         i_h = x_in[3]
 
         x1 = - sigma_v * i_h / n_v
-        x3 = - sigma_h * i_v / n_v
+        x3 = - sigma_h * i_v / n_h
         bp = np.zeros([4, 4], dtype=np.float128)
         bp[0, 0] = x1
         bp[2, 2] = x3

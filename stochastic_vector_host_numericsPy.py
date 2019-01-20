@@ -9,8 +9,8 @@ r = p
 T0 = 0.0
 T = 200
 
-sigma_v = 1.95  # Vector noise intensity
-sigma_h = 1.95  # Host noise intensity
+sigma_v = 1.1  # Vector noise intensity
+sigma_h = 1.1  # Host noise intensity
 lambda_h = 114.286  # Whole host population
 lambda_v = 21000.0  # Vector birth rate
 beta_v = 0.00003900042152404787  # Host to vector transmission rate
@@ -22,9 +22,9 @@ x_zero = np.array([2000.0, 1.0, 3500.0, 150.0])
 
 svh = NumericsStochasticVectorHostDynamics()
 svh.initialize_mesh(k, p, r, T0, T)
-svh.set_parameters_stochastic_vector_host_dynamics(mu_v, beta_v, lambda_v, mu_h,
-                                                   beta_h, lambda_h, sigma_v,
-                                                   sigma_h, x_zero)
+svh.set_parameters_stochastic_vector_host_dynamics(mu_v, beta_v, lambda_v,
+                                                   mu_h, beta_h, lambda_h,
+                                                   sigma_v, sigma_h, x_zero)
 x_det = svh.deterministic_linear_steklov()
 xst = svh.linear_steklov()
 
@@ -37,7 +37,7 @@ sto_vector_cl = xst[:, 0] + xst[:, 1]
 print "======================================================================="
 print "\n"
 print "\r R_D:= ", r_zero[0]
-# print "\r R_S:= ", r_zero[1]
+print "\r R_S:= ", r_zero[1]
 """
     Auxiliary plot
 """
@@ -133,7 +133,7 @@ ax_nv.set_ylabel(r'$N_V$')  # (r'Conservative law')
 ax_sh.set_ylabel(r'$S_H$')
 ax_ih.set_ylabel(r'$I_H$')
 ax_nh.set_ylabel(r'$N_H$')
-
+#
 #
 # stochastic plot
 #
@@ -211,6 +211,6 @@ ax_ih.legend(
         ncol=2,
         numpoints=1,
         borderaxespad=0.04
-)
+    )
 plt.tight_layout()
 plt.show()
