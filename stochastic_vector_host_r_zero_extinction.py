@@ -22,7 +22,7 @@ n_v = lambda_v / mu_v
 n_h = x_zero[2] + x_zero[3]
 beta_v = mu_v / n_v
 beta_h = mu_h / n_h
-mu_v = 2.1 - 0.2
+mu_v = 2.1 - .2
 
 svh = NumericsStochasticVectorHostDynamics()
 svh.initialize_mesh(k, p, r, T0, T)
