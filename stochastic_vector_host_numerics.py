@@ -29,9 +29,25 @@
 """
 from stochastic_vector_host_model import StochasticVectorHostDynamics
 import numpy as np
+import matplotlib.pyplot as plt
 from scipy.optimize import fsolve
-# from scipy.integrate import odeint
+from matplotlib import rcParams
 from scipy.integrate import ode
+# from scipy.integrate import odeint
+
+rcParams['font.family'] = 'sans-serif'
+rcParams['font.sans-serif'] = ['DejaVu']
+params = {
+    'figure.titlesize': 10,
+    'axes.titlesize': 10,
+    'axes.labelsize': 10,
+    'font.size': 10,
+    'legend.fontsize': 8,
+    'xtick.labelsize': 8,
+    'ytick.labelsize': 8,
+    'text.usetex': True
+    }
+rcParams.update(params)
 
 
 class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
@@ -79,9 +95,10 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         self.w_inc_2 = 0.0
         self.w_inc = np.array([[self.w_inc_1], [self.w_inc_1],
                                [self.w_inc_2]], dtype=np.float128)
-
+        #
         #
         # Arrays for solutions
+        #
 
         self.x_det = np.zeros([self.ll + 1, 4], dtype=np.float128)
         self.x_sto = np.zeros([self.ll + 1, 4], dtype=np.float128)
@@ -372,7 +389,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         beta_v = self.beta_v
         beta_h = self.beta_h
         lambda_v = self.lambda_v
-        lambda_h = self.lambda_h
+        # lambda_h = self.lambda_h
         mu_v = self.mu_v
         mu_h = self.mu_h
 
@@ -414,18 +431,18 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
 
             drift_increment = np.array([[x], [y], [z], [w]])
             winner_increment = np.dot(self.b(self.x_sto[j]), self.w_inc)
-            stk = drift_increment + winner_increment
+            st_k = drift_increment + winner_increment
 
             # conservative law improvement
-            sign_stk = np.sign(stk)
-            sign_stk = (sign_stk < 0)
-            sign_stk_vector = sign_stk[0: 2]
-            sign_stk_host = sign_stk[2: 4]
-            if any(sign_stk_vector):
-                stk[0: 2] = drift_increment[0: 2] - winner_increment[0: 2]
-            if any(sign_stk_host):
-                stk[2: 4] = drift_increment[2: 4] - winner_increment[2: 4]
-            self.x_sto[j + 1] = np.reshape(stk, 4)
+            sign_st_k = np.sign(st_k)
+            sign_st_k = (sign_st_k < 0)
+            sign_st_k_vector = sign_st_k[0: 2]
+            sign_st_k_host = sign_st_k[2: 4]
+            if any(sign_st_k_vector):
+                st_k[0: 2] = drift_increment[0: 2] - winner_increment[0: 2]
+            if any(sign_st_k_host):
+                st_k[2: 4] = drift_increment[2: 4] - winner_increment[2: 4]
+            self.x_sto[j + 1] = np.reshape(st_k, 4)
         x_sto = self.x_sto
         return x_sto
 
@@ -437,7 +454,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         beta_v = self.beta_v
         beta_h = self.beta_h
         lambda_v = self.lambda_v
-        lambda_h = self.lambda_h
+        # lambda_h = self.lambda_h
         mu_v = self.mu_v
         mu_h = self.mu_h
 
@@ -473,12 +490,12 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             a4 = - mu_h
             b4 = beta_h * zj * yj
             w = np.exp(a4 * h) * wj + phi(a4, b4)
-            
-            stk = np.array([x, y, z, w])
-            self.x_det[j + 1, :] = stk[:]
 
-        x_det_stkm = self.x_det
-        return x_det_stkm
+            st_k = np.array([x, y, z, w])
+            self.x_det[j + 1, :] = st_k[:]
+
+        x_det_st_km = self.x_det
+        return x_det_st_km
 
     def save_data(self):
         """
@@ -553,3 +570,187 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         np.savetxt(name2, data_det, fmt='%1.8f', delimiter='\t')
         np.savetxt(name3, data_sto, fmt='%1.8f', delimiter='\t')
         return
+
+    def plotting(self, file_name='figure_.pdf'):
+
+        x_det = self.x_det
+        x_sto = self.x_sto
+        t_k = self.dt * self.tau
+
+        det_vector_cl = x_det[:, 0] + x_det[:, 1]
+        sto_vector_cl = x_sto[:, 0] + x_sto[:, 1]
+
+        plt.style.use('ggplot')
+        fig2 = plt.figure()
+
+        ax_sv = plt.subplot2grid((4, 3), (0, 2))
+        ax_iv = plt.subplot2grid((4, 3), (0, 0), rowspan=2, colspan=2)
+        ax_nv = plt.subplot2grid((4, 3), (1, 2))
+
+        ax_sh = plt.subplot2grid((4, 3), (2, 2))
+        ax_ih = plt.subplot2grid((4, 3), (2, 0), rowspan=2, colspan=2)
+        ax_nh = plt.subplot2grid((4, 3), (3, 2))
+        det_color = '#ff0000'
+        sto_color = '#80ccff'
+
+        # Deterministic Plots
+
+        ax_sv.plot(t_k, x_det[:, 0],
+                   color=det_color,
+                   marker='',
+                   alpha=1,
+                   lw=1,
+                   ls='-',
+                   ms=1,
+                   mfc='none',
+                   mec=det_color,
+                   label='Det'
+                   )
+
+        ax_iv.plot(t_k, x_det[:, 1],
+                   color=det_color,
+                   marker='',
+                   alpha=1,
+                   lw=1,
+                   ls='-',
+                   ms=1,
+                   mfc='none',
+                   mec=det_color,
+                   label=r'Det'
+                   )
+        ax_nv.plot(t_k, det_vector_cl,
+                   color=det_color,
+                   marker='',
+                   alpha=1,
+                   lw=1,
+                   ls='-',
+                   ms=1,
+                   mfc='none',
+                   mec=det_color,
+                   label=r'Det'
+                   )
+        ax_sh.plot(t_k, x_det[:, 2],
+                   color=det_color,
+                   marker='',
+                   alpha=1,
+                   lw=1,
+                   ls='-',
+                   ms=1,
+                   mfc='none',
+                   mec=det_color,
+                   label=r'Det'
+                   )
+        ax_ih.plot(t_k, x_det[:, 3],
+                   color=det_color,
+                   marker='',
+                   alpha=1,
+                   lw=1,
+                   ls='-',
+                   ms=1,
+                   mfc='none',
+                   mec=det_color,
+                   label=r'Det'
+                   )
+
+        ax_nh.plot(t_k, x_det[:, 2] + x_det[:, 3],
+                   color=det_color,
+                   marker='',
+                   alpha=1,
+                   lw=1,
+                   ls='-',
+                   ms=1,
+                   mfc='none',
+                   mec=det_color,
+                   label=r'Det'
+                   )
+
+        ax_sh.set_xlabel(r'$t$')  # (days)')
+        #
+        ax_sv.set_ylabel(r'$S_V$')  # (r'Suceptibles vectors')
+        ax_iv.set_ylabel(r'$I_V$')  # (r'Infected vectors')
+        ax_nv.set_ylabel(r'$N_V$')  # (r'Conservative law')
+        ax_sh.set_ylabel(r'$S_H$')
+        ax_ih.set_ylabel(r'$I_H$')
+        ax_nh.set_ylabel(r'$N_H$')
+        #
+        #
+        # stochastic plot
+        #
+        ax_sv.plot(t_k, x_sto[:, 0],
+                   color=sto_color,
+                   marker='.',
+                   alpha=0.04,
+                   lw=1,
+                   ls='-',
+                   ms=3,
+                   mfc='none',
+                   mec=sto_color,
+                   label='sto'
+                   )
+
+        ax_iv.plot(t_k, x_sto[:, 1],
+                   color=sto_color,
+                   marker='.',
+                   alpha=0.04,
+                   lw=1,
+                   ls='-',
+                   ms=2,
+                   mfc='none',
+                   mec=sto_color,
+                   label='sto'
+                   )
+        ax_nv.plot(t_k, sto_vector_cl,
+                   color=sto_color,
+                   marker='.',
+                   alpha=0.04,
+                   lw=1,
+                   ls='-',
+                   ms=2,
+                   mfc='none',
+                   mec=sto_color,
+                   label='sto'
+                   )
+
+        ax_sh.plot(t_k, x_sto[:, 2],
+                   color=sto_color,
+                   marker='.',
+                   alpha=0.04,
+                   lw=1,
+                   ls='-',
+                   ms=2,
+                   mfc='none',
+                   mec=sto_color,
+                   label='sto'
+                   )
+        ax_ih.plot(t_k, x_sto[:, 3],
+                   color=sto_color,
+                   marker='.',
+                   alpha=0.04,
+                   lw=1,
+                   ls='-',
+                   ms=2,
+                   mfc='none',
+                   mec=sto_color,
+                   label='sto'
+                   )
+        ax_nh.plot(t_k, x_sto[:, 2] + x_sto[:, 3],
+                   color=sto_color,
+                   marker='.',
+                   alpha=0.04,
+                   lw=1,
+                   ls='-',
+                   ms=2,
+                   mfc='none',
+                   mec=sto_color,
+                   label='sto'
+                   )
+        ax_ih.legend(
+            bbox_to_anchor=(0.15, 1, 1., .10),
+            loc=0,
+            ncol=2,
+            numpoints=1,
+            borderaxespad=0.04
+            )
+        plt.tight_layout()
+        plt.savefig(file_name)
+        plt.show()
