@@ -65,15 +65,15 @@ class StochasticVectorHostDynamics(object):
 
     def r_zero(self):
         mu_v = self.mu_v
+        mu_h = self.mu_h
         beta_v = self.beta_v
+        beta_h = self.beta_h
         lambda_v = self.lambda_v
         lambda_h = self.lambda_h
-        mu_h = self.mu_h
-        beta_h = self.beta_h
+        n_v = lambda_v / mu_v
         n_h = self.x_zero[2] + self.x_zero[3]
         sigma_v = self.sigma_v
         sigma_h = self.sigma_h
-        n_v = lambda_v / mu_v
         deterministic_r_zero = (beta_v * beta_h * n_v * n_h) / (mu_v * mu_h)
         stochastic_r_zero = deterministic_r_zero - 0.5 * (sigma_v ** 2
                                                           + sigma_h ** 2)
@@ -95,6 +95,32 @@ class StochasticVectorHostDynamics(object):
         print "\t vector_upper_bound:\t", self.vector_upper_bound
         print "\t host_upper_bound:\t", self.host_upper_bound
         return np.array([deterministic_r_zero, stochastic_r_zero])
+
+    def extinction_conditions(self):
+        mu_v = self.mu_v
+        mu_h = self.mu_h
+        beta_v = self.beta_v
+        beta_h = self.beta_h
+        lambda_v = self.lambda_v
+        lambda_h = self.lambda_h
+        n_v = lambda_v / mu_v
+        n_h = self.x_zero[2] + self.x_zero[3]
+        sigma_v = self.sigma_v
+        sigma_h = self.sigma_h
+
+        aux_v = beta_v * n_v / np.sqrt(2.0 * mu_v)
+        aux_h = beta_h * n_h / np.sqrt(2.0 * mu_h)
+        max_aux = np.max([aux_v, aux_h])
+        min_sigma = np.min([sigma_v, sigma_h])
+        extinction_noise_condition = (min_sigma >= max_aux)
+        if extinction_noise_condition:
+            print 'Extinction by noise: =)'
+            print '\tmin_sig, max_par', min_sigma, max_aux
+        else:
+            print 'Extinction by noise: =('
+            print '\tmin_sig, max_par', min_sigma, max_aux
+        #
+        # extinction by R0S<1 and small noise
 
     def set_parameters_stochastic_vector_host_dynamics(self, mu_v, beta_v,
                                                        lambda_v, mu_h, beta_h,
