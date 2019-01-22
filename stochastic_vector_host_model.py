@@ -70,7 +70,7 @@ class StochasticVectorHostDynamics(object):
         beta_h = self.beta_h
         lambda_v = self.lambda_v
         # lambda_h = self.lambda_h
-        
+
         n_v = lambda_v / mu_v
         n_h = self.x_zero[2] + self.x_zero[3]
         sigma_v = self.sigma_v
@@ -85,7 +85,7 @@ class StochasticVectorHostDynamics(object):
         aux_1 = np.sqrt((beta_v * n_v) ** 2 / (2 * mu_v))
         aux_2 = np.sqrt((beta_h * n_h) ** 2 / (2 * mu_h))
         aux_3 = np.min([sigma_h, sigma_v])
-        
+
         self.noise_extinction_condition = np.max([aux_1, aux_2])
         self.noise_intensity_test = aux_3 > self.noise_extinction_condition
         self.vector_upper_bound = n_v
@@ -106,7 +106,7 @@ class StochasticVectorHostDynamics(object):
             print ('\t\t[sig_v, sig_h, bound_v, bound_h] '
                    '= [%5.4f, %5.4f, %5.4f, %5.4f]'
                    % (sigma_v, sigma_h, aux_1, aux_2))
-        
+
         return np.array([deterministic_r_zero, stochastic_r_zero])
 
     def extinction_conditions(self):
@@ -128,14 +128,17 @@ class StochasticVectorHostDynamics(object):
                                                           + sigma_h ** 2)
 
         r_zero_minus_one = (1.0 - deterministic_r_zero)
-        n = -3.35
-        den_x = r_zero_minus_one * 2.0 ** (-n) + beta_v * n_v + beta_h * n_h
+        n = 1.2
+        pow_2 = np.min([2.0 ** (-n), 2.0 ** n])
+        den_x = r_zero_minus_one * pow_2 \
+                + 2.0 ** n * beta_v * n_v \
+                + 2.0 ** (-n) * beta_h * n_h
         num_x = mu_v * mu_h
-        x = num_x / den_x
+        x = num_x / (den_x * (1.0 + 2.0 ** (-n)))
         y = x * 2.0 ** (-n)
         cond_e1 = (mu_h <= x and mu_v <= y) or (mu_v <= y or mu_v <= x)
         sigma_v_bound = np.sqrt((y / x) * beta_v * n_v)
-        sigma_h_bound = np.sqrt((y / x) * beta_h * n_h)
+        sigma_h_bound = np.sqrt((x / y) * beta_h * n_h)
         cond_e2 = (sigma_v <= sigma_v_bound) and (sigma_h <= sigma_h_bound)
         cond_e3 = (stochastic_r_zero < 1.0)
         cond = (cond_e1 and cond_e2) and cond_e3
@@ -149,27 +152,27 @@ class StochasticVectorHostDynamics(object):
 
         if cond_e1:
             print "\t (E-1): =)"
-            print ('\t\t [x, y, mu_v, mu_h]= [%5.4f, %5.4f, %5.4f, %5.4f]'
+            print ('\t\t [x, y, mu_v, mu_h] = [%5.8f, %5.8f, %5.8f, %5.8f]'
                    % (x, y, mu_v, mu_h))
         else:
             print "\t (E-1): =("
-            print ('\t\t [x, y, mu_v, mu_h]= [%5.4f, %5.4f, %5.4f, %5.4f]'
+            print ('\t\t [x, y, mu_v, mu_h] = [%5.8f, %5.8f, %5.8f, %5.8f]'
                    % (x, y, mu_v, mu_h))
         if cond_e2:
             print "\t (E-2): =)"
-            print ('\t\t (sig_v, sig_h) = (%5.4f, %5.4f)'
+            print ('\t\t (sig_v, sig_h) = (%5.8f, %5.8f)'
                    % (sigma_v, sigma_h))
-            print ('\t\t (sig_v_bound, sig_h_bound) = (%5.4f, %5.4f)'
+            print ('\t\t (sig_v_bound, sig_h_bound) = (%5.8f, %5.8f)'
                    % (sigma_v_bound, sigma_h_bound))
         else:
             print "\t (E-2): =("
-            print ('\t\t (sig_v, sig_h) = (%5.4f, %5.4f)'
+            print ('\t\t (sig_v, sig_h) = (%5.8f, %5.8f)'
                    % (sigma_v, sigma_h))
-            print ('\t\t (sig_v_bound, sig_h_bound) = (%5.4f, %5.4f)'
+            print ('\t\t (sig_v_bound, sig_h_bound) = (%5.8f, %5.8f)'
                    % (sigma_v_bound, sigma_h_bound))
         if cond_e3:
             print "\t (E-3): =)"
-            print ('\t\tR0D: %5.4f, \t R0S: %5.4f'
+            print ('\t\tR0D: %5.8f, \t R0S: %5.8f'
                    % (deterministic_r_zero, stochastic_r_zero))
 
     def set_parameters_stochastic_vector_host_dynamics(self, mu_v, beta_v,
@@ -260,5 +263,4 @@ class StochasticVectorHostDynamics(object):
         bp[0, 0] = x1
         bp[2, 2] = x3
         bp = np.dot(b, bp)
-
         return bp
