@@ -11,6 +11,7 @@ T = 200
 
 # Conditions for extinction by noise
 
+<<<<<<< HEAD
 sigma_v = 1.1  # Vector noise intensity
 sigma_h = 1.1  # Host noise intensity
 lambda_h = 114.286  # Whole host population
@@ -19,6 +20,16 @@ beta_v = 0.00003900042152404787  # Host to vector transmission rate
 beta_h = 0.00003269533157348633  # Vector to host transmission rate
 mu_v = 2.1  # Vector mortality rate
 mu_h = 0.0142857  # Host mortality rate
+=======
+sigma_v = 1.1                       # Vector noise intensity
+sigma_h = 1.1                       # Host noise intensity
+lambda_h = 114.286                  # Whole host population
+lambda_v = 21000.0                  # Vector birth rate
+beta_v = 0.00003900042152404787     # Host to vector transmission rate
+beta_h = 0.00003269533157348633     # Vector to host transmission rate
+mu_v = 2.1                          # Vector mortality rate
+mu_h = 0.0142857                    # Host mortality rate
+>>>>>>> 82d91fb35f11bad608804e18df73e06ba4cd2e37
 x_zero = np.array([2000.0, 1.0, 3500.0, 150.0])
 
 svh = NumericsStochasticVectorHostDynamics()
@@ -209,11 +220,19 @@ ax_nh.plot(tk, xst[:, 2] + xst[:, 3],
            label='sto'
            )
 ax_ih.legend(
+<<<<<<< HEAD
     bbox_to_anchor=(0.15, 1, 1., .10),
     loc=0,
     ncol=2,
     numpoints=1,
     borderaxespad=0.04
+=======
+        bbox_to_anchor=(0.15, 1, 1., .10),
+        loc=0,
+        ncol=2,
+        numpoints=1,
+        borderaxespad=0.04
+>>>>>>> 82d91fb35f11bad608804e18df73e06ba4cd2e37
     )
 plt.tight_layout()
 plt.show()
