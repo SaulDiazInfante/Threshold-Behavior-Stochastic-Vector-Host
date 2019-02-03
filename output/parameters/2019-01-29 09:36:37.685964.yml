@@ -1,0 +1,47 @@
+beta_h: !!python/object/apply:numpy.core.multiarray.scalar
+  - &id001 !!python/object/apply:numpy.dtype
+    args:
+      - f8
+      - 0
+      - 1
+    state: !!python/tuple
+      - 3
+      - <
+      - null
+      - null
+      - null
+      - -1
+      - -1
+      - 0
+  - !!binary |
+    NHQRAYJq0D4=
+beta_v: 0.00021
+i_h0: !!python/object/apply:numpy.core.multiarray.scalar
+  - *id001
+  - !!binary |
+    AAAAAADAYkA=
+i_v0: !!python/object/apply:numpy.core.multiarray.scalar
+  - *id001
+  - !!binary |
+    AAAAAAAA8D8=
+lambda_h: 114.286
+lambda_v: 21000.0
+mu_h: 0.0142857
+mu_v: 2.0900000000000003
+n_h: !!python/object/apply:numpy.core.multiarray.scalar
+  - *id001
+  - !!binary |
+    AAAAAACErEA=
+n_v: 10047.846889952152
+r_zero_d: 0.0
+r_zero_s: 0.0
+s_h0: !!python/object/apply:numpy.core.multiarray.scalar
+  - *id001
+  - !!binary |
+    AAAAAABYq0A=
+s_v0: !!python/object/apply:numpy.core.multiarray.scalar
+  - *id001
+  - !!binary |
+    AAAAAABAn0A=
+sigma_h: 0.1
+sigma_v: 0.1
