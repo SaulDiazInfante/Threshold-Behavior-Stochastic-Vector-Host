@@ -123,9 +123,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         self.rr = np.int(2.0 ** r)
         """
         self.t_f = t_f
-
         #
-
         self.dt = self.t_f / np.float(self.n)
         self.index_n = np.arange(self.n + 1)
 
