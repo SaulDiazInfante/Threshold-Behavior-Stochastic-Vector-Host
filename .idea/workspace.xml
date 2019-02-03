@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3a3dceec-c6fa-4596-b7b0-1da700e5b645" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/git.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/git.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stochastic_vector_host_model_vector_normalized.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stochastic_vector_host_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/stochastic_vector_host_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stochastic_vector_host_noise _extinctionPy.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/stochastic_vector_host_numerics.py" beforeDir="false" afterPath="$PROJECT_DIR$/stochastic_vector_host_numerics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stochastic_vector_host_r_zero_extinctionPy.py" beforeDir="false" afterPath="$PROJECT_DIR$/stochastic_vector_host_r_zero_extinctionPy.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,14 +15,14 @@
     <favorites_list name="git" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.47937837">
+    <splitter split-orientation="horizontal" split-proportion="0.4542824">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/stochastic_vector_host_r_zero_extinctionPy.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="126">
-                  <caret line="7" column="5" lean-forward="true" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
+                <state relative-caret-position="-198">
+                  <caret line="13" column="37" lean-forward="true" selection-start-line="13" selection-start-column="37" selection-end-line="13" selection-end-column="37" />
                   <folding>
                     <element signature="e#0#18#0" expanded="true" />
                   </folding>
@@ -41,19 +35,22 @@
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/stochastic_vector_host_numerics.py">
+            <entry file="file://$PROJECT_DIR$/stochastic_vector_host_model.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2214">
-                  <caret line="128" selection-start-line="128" selection-end-line="128" />
+                <state relative-caret-position="18">
+                  <caret line="25" column="3" lean-forward="true" selection-start-line="25" selection-start-column="3" selection-end-line="25" selection-end-column="3" />
+                  <folding>
+                    <element signature="e#952#970#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
           </file>
           <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/stochastic_vector_host_model.py">
+            <entry file="file://$PROJECT_DIR$/stochastic_vector_host_model_vector_normalized.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="180">
-                  <caret line="31" column="15" lean-forward="true" selection-start-line="31" selection-start-column="15" selection-end-line="31" selection-end-column="15" />
+                <state relative-caret-position="504">
+                  <caret line="337" lean-forward="true" selection-start-line="337" selection-end-line="337" />
                 </state>
               </provider>
             </entry>
@@ -68,6 +65,7 @@
         <option value="SDIV" />
       </list>
     </option>
+    <option name="UPDATE_TYPE" value="MERGE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="PUSH_TAGS">
       <GitPushTagMode />
@@ -85,6 +83,7 @@
         <option value="$PROJECT_DIR$/stochastic_vector_host_numerics.py" />
         <option value="$PROJECT_DIR$/stochastic_vector_host_model.py" />
         <option value="$PROJECT_DIR$/stochastic_vector_host_r_zero_extinctionPy.py" />
+        <option value="$PROJECT_DIR$/stochastic_vector_host_model_vector_normalized.py" />
       </list>
     </option>
   </component>
@@ -105,6 +104,17 @@
               <item name="git" type="b2602c69:ProjectViewProjectNode" />
               <item name="git" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="git" type="b2602c69:ProjectViewProjectNode" />
+              <item name="git" type="462c0819:PsiDirectoryNode" />
+              <item name="output" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="git" type="b2602c69:ProjectViewProjectNode" />
+              <item name="git" type="462c0819:PsiDirectoryNode" />
+              <item name="output" type="462c0819:PsiDirectoryNode" />
+              <item name="parameters" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -115,6 +125,11 @@
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -196,9 +211,6 @@
       <module name="git" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -206,7 +218,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/stochastic_vector_host_r_zero_extinctionPy.py" />
       <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
@@ -215,6 +227,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.stochastic_vector_host_r_zero_extinctionPy" />
         <item itemvalue="Python.stochastic_vector_host_r_zero_extinctionPy" />
         <item itemvalue="Python.stochastic_vector_host_model" />
         <item itemvalue="Python.stochastic_vector_host_noise _extinctionPy" />
@@ -275,26 +288,41 @@
       <option name="project" value="LOCAL" />
       <updated>1547954845606</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="New Rs implementation">
+      <created>1549225159705</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1549225159705</updated>
+    </task>
+    <task id="LOCAL-00008" summary="New Rs implementation">
+      <created>1549225178905</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1549225178905</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="28" width="1920" height="1022" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4942717" visible="true" weight="0.14973262" />
-      <window_info id="Structure" order="1" sideWeight="0.5057283" side_tool="true" visible="true" weight="0.14973262" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4949833" visible="true" weight="0.075935826" />
+      <window_info id="Structure" order="1" sideWeight="0.50501674" side_tool="true" visible="true" weight="0.075935826" />
       <window_info id="Favorites" order="2" sideWeight="0.5016129" side_tool="true" weight="0.11366062" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.5534759" visible="true" weight="0.30725622" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.5529412" weight="0.30725622" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49786553" weight="0.39870688" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.43062967" weight="0.3286638" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49304813" weight="0.32199547" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.44652405" side_tool="true" visible="true" weight="0.30725622" />
-      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.4994664" weight="0.32900432" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.49197862" visible="true" weight="0.32199547" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5080214" side_tool="true" visible="true" weight="0.32199547" />
+      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49786097" weight="0.32879817" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -387,20 +415,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/stochastic_vector_host_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="31" column="15" lean-forward="true" selection-start-line="31" selection-start-column="15" selection-end-line="31" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/stochastic_vector_host_r_zero_extinctionPy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="7" column="5" lean-forward="true" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
+        <state relative-caret-position="-198">
+          <caret line="13" column="37" lean-forward="true" selection-start-line="13" selection-start-column="37" selection-end-line="13" selection-end-column="37" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stochastic_vector_host_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="25" column="3" lean-forward="true" selection-start-line="25" selection-start-column="3" selection-end-line="25" selection-end-column="3" />
+          <folding>
+            <element signature="e#952#970#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/stochastic_vector_host_model_vector_normalized.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="337" lean-forward="true" selection-start-line="337" selection-end-line="337" />
         </state>
       </provider>
     </entry>
