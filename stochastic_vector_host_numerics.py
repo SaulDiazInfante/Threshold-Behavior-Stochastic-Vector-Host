@@ -7,13 +7,13 @@
         \begin{aligned}
             d S_V &=
                 \left [
-                    \Lambda_V - \beta_V / N_H S_V I_H - \mu_V S_V
+                    \Lambda_V - \beta_V / N_V S_V I_H - \mu_V S_V
                 \right ] dt
                 - \sigma_V S_V I_H dB_t^V,
                 \\
             d I_V &=
                 \left [
-                   \beta_V / N_H S_V I_H - \mu_V I_V
+                   \beta_V / N_V S_V I_H - \mu_V I_V
                 \right ]
                 dt
                 + \sigma_V S_V I_H dB_t^V,
@@ -27,7 +27,8 @@
        \end{aligned}
     \end{equation}
 """
-from stochastic_vector_host_model import StochasticVectorHostDynamics
+from stochastic_vector_host_model_vector_normalized import \
+    StochasticVectorHostDynamics
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import fsolve
@@ -341,16 +342,16 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             mu_h = self.mu_h
 
             f_sv = [
-                - beta_v * i_h / n_h - mu_v,
+                - beta_v * i_h / n_v - mu_v,
                 0,
-                beta_v * s_v * i_h / n_h ** 2,
-                beta_v * s_v * i_h / n_h ** 2 - beta_v * s_v / n_h
+                beta_v * s_v * i_h / n_v ** 2,
+                beta_v * s_v * i_h / n_v ** 2 - beta_v * s_v / n_h
                 ]
             f_iv = [
                 beta_v * i_h / n_h,
                 - mu_v,
-                - beta_v * s_v * i_h / n_h ** 2,
-                - beta_v * s_v * i_h / n_h ** 2 + beta_v * s_v / n_h
+                - beta_v * s_v * i_h / n_v ** 2,
+                - beta_v * s_v * i_h / n_v ** 2 + beta_v * s_v / n_h
                 ]
             f_sh = [
                 beta_h * s_h * i_v / n_v ** 2,
@@ -387,7 +388,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         beta_v = self.beta_v
         beta_h = self.beta_h
         lambda_v = self.lambda_v
-        # lambda_h = self.lambda_h
+        lambda_h = self.lambda_h
         mu_v = self.mu_v
         mu_h = self.mu_h
 
@@ -410,21 +411,21 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             yj = self.x_sto[j, 1]
             zj = self.x_sto[j, 2]
             wj = self.x_sto[j, 3]
-
-            a1 = - (beta_v * wj + mu_v)
+            nvj = xj + yj
+            a1 = - (beta_v * wj / nvj + mu_v)
             b1 = lambda_v
             x = np.exp(h * a1) * xj + phi(a1, b1)
 
-            a2 = - mu_v
-            b2 = beta_v * xj * wj
+            a2 = beta_v * xj * wj / (nvj * yj) - mu_v
+            b2 = 0.0
             y = np.exp(a2 * h) * yj + phi(a2, b2)
 
-            a3 = - beta_h * yj
-            b3 = mu_h * wj
+            a3 = - (beta_h * yj / nvj + mu_h)
+            b3 = lambda_h
             z = np.exp(a3 * h) * zj + phi(a3, b3)
 
             a4 = - mu_h
-            b4 = beta_h * zj * yj
+            b4 = beta_h * yj * zj / nvj
             w = np.exp(a4 * h) * wj + phi(a4, b4)
 
             drift_increment = np.array([[x], [y], [z], [w]])
@@ -452,7 +453,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         beta_v = self.beta_v
         beta_h = self.beta_h
         lambda_v = self.lambda_v
-        # lambda_h = self.lambda_h
+        lambda_h = self.lambda_h
         mu_v = self.mu_v
         mu_h = self.mu_h
 
@@ -473,20 +474,21 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             zj = self.x_det[j, 2]
             wj = self.x_det[j, 3]
 
-            a1 = - (beta_v * wj + mu_v)
+            nvj = xj + yj
+            a1 = - (beta_v * wj / nvj + mu_v)
             b1 = lambda_v
             x = np.exp(h * a1) * xj + phi(a1, b1)
 
-            a2 = - mu_v
-            b2 = beta_v * xj * wj
+            a2 = beta_v * xj * wj / (nvj * yj) - mu_v
+            b2 = 0.0
             y = np.exp(a2 * h) * yj + phi(a2, b2)
 
-            a3 = - beta_h * yj
-            b3 = mu_h * wj
+            a3 = - (beta_h * yj / nvj + mu_h)
+            b3 = lambda_h
             z = np.exp(a3 * h) * zj + phi(a3, b3)
 
             a4 = - mu_h
-            b4 = beta_h * zj * yj
+            b4 = beta_h * yj * zj / nvj
             w = np.exp(a4 * h) * wj + phi(a4, b4)
 
             st_k = np.array([x, y, z, w])
