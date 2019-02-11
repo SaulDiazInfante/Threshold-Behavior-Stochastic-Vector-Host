@@ -40,7 +40,7 @@ class StochasticVectorHostDynamics(object):
 
     def __init__(self, mu_v=2.1, beta_v=.3, lambda_v=189000.0,
                  mu_h=0.0142857, beta_h=.15, lambda_h=1142.856,
-                 sigma_v=1.0, sigma_h=1.0,
+                 sigma_v=1.0, sigma_h=1.0, alpha=2.0 / 5.0,
                  x_zero=np.array([1190, 10, 1000, 100])):
         #
         self.mu_v = mu_v
@@ -49,6 +49,7 @@ class StochasticVectorHostDynamics(object):
         self.lambda_h = lambda_h
         self.mu_h = mu_h
         self.beta_h = beta_h
+        self.alpha = alpha
 
         #
         #
@@ -150,9 +151,10 @@ class StochasticVectorHostDynamics(object):
                    '= [%5.4f, %5.4f, %5.4f, %5.4f]'
                    % (sigma_v, sigma_h, aux_1, aux_2))
 
-        cond_e_a = mu_h < 1.0
-        cond_e_b = mu_v < 1.0
-        cond_e1 = cond_e_a and cond_e_b
+        cond_e_a = beta_v * n_v_inf > 1.0
+        cond_e_b = beta_h * n_h_inf > 1.0
+        cond_e_c = (beta_v * n_v_inf ** -1 + beta_h * n_h_inf ** - 1) < 1.0
+        cond_e1 = cond_e_a and cond_e_b and cond_e_c
         #
         sigma_v_bound = np.sqrt(beta_v * n_v_inf)
         sigma_h_bound = np.sqrt(beta_h * n_h_inf)
@@ -169,12 +171,13 @@ class StochasticVectorHostDynamics(object):
         print"\t----------------------"
         if cond_e1:
             print "\t (E-1): =)"
-            print ('\t\t [mu_v, mu_h] = [%5.8f, %5.8f]'
-                   % (mu_v, mu_h))
+            print ('\t\t [beta_v n_v, beta_h n_h] = [%5.8f, %5.8f]'
+                   % (beta_v * n_v_inf, beta_h * n_h_inf))
         else:
             print "\t (E-1): =("
-            print ('\t\t [mu_v, mu_h] = [%5.8f, %5.8f]'
-                   % (mu_v, mu_h))
+            print ('\t\t [beta_v n_v, beta_h n_h] = [%5.8f, %5.8f]'
+                   % (beta_v * n_v_inf, beta_h * n_h_inf))
+
         if cond_e2:
             print "\t (E-2): =)"
         else:
