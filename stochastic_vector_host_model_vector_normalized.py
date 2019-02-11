@@ -128,8 +128,12 @@ class StochasticVectorHostDynamics(object):
         # Reproductive numbers
         deterministic_r_zero = (beta_v * beta_h * n_v_inf * n_h_inf) / \
                                (mu_v * mu_h)
-        sigma_aster = (sigma_v ** 2 + sigma_h ** 2) / (mu_v * mu_h)
-
+        # sigma_aster = (sigma_v ** 2 + sigma_h ** 2) / (mu_v * mu_h)
+        sigma_aster = \
+            ((1.0 - mu_h / (beta_v * n_v_inf) * sigma_v) ** 2
+             +
+             (1.0 - mu_h / (beta_v * n_v_inf) * sigma_h) ** 2) \
+            / (2.0 * mu_v * mu_h)
         stochastic_r_zero = deterministic_r_zero - 0.5 * sigma_aster
         aux_1 = np.sqrt((beta_v * n_v_inf) ** 2 / (2 * mu_v))
         aux_2 = np.sqrt((beta_h * n_h_inf) ** 2 / (2 * mu_h))
@@ -162,6 +166,7 @@ class StochasticVectorHostDynamics(object):
         cond_e2 = (sigma_v < sigma_v_bound) and (sigma_h < sigma_h_bound)
         cond_e3 = (stochastic_r_zero < 1.0)
         cond = (cond_e1 and cond_e2) and cond_e3
+
         print"\n"
         if cond:
             str_cond = '\n\tR0s extinction: ' + '=)'

@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3a3dceec-c6fa-4596-b7b0-1da700e5b645" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/sauldiazinfantevelasco.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/git/.idea (2)/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/git/.idea (2)/git.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/git/.idea (2)/libraries/R_User_Library.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/git/.idea (2)/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/git/.idea (2)/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/git.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/git.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
@@ -26,8 +29,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/stochastic_vector_host_r_zero_extinctionPy.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="195">
-                  <caret line="13" column="51" lean-forward="true" selection-start-line="13" selection-start-column="51" selection-end-line="13" selection-end-column="51" />
+                <state relative-caret-position="331">
+                  <caret line="24" column="25" lean-forward="true" selection-start-line="24" selection-start-column="25" selection-end-line="24" selection-end-column="25" />
                   <folding>
                     <element signature="e#0#18#0" expanded="true" />
                   </folding>
@@ -42,8 +45,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/stochastic_vector_host_model_vector_normalized.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="15">
-                  <caret line="51" column="26" selection-start-line="51" selection-start-column="26" selection-end-line="51" selection-end-column="26" />
+                <state relative-caret-position="260">
+                  <caret line="159" column="57" selection-start-line="159" selection-start-column="57" selection-end-line="159" selection-end-column="57" />
                 </state>
               </provider>
             </entry>
@@ -75,15 +78,16 @@
         <option value="$PROJECT_DIR$/stochastic_vector_host_noise _extinctionPy.py" />
         <option value="$PROJECT_DIR$/stochastic_vector_host_numerics.py" />
         <option value="$PROJECT_DIR$/stochastic_vector_host_model.py" />
-        <option value="$PROJECT_DIR$/stochastic_vector_host_model_vector_normalized.py" />
         <option value="$PROJECT_DIR$/stochastic_vector_host_r_zero_extinctionPy.py" />
+        <option value="$PROJECT_DIR$/stochastic_vector_host_model_vector_normalized.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="31" />
-    <option name="width" value="1717" />
-    <option name="height" value="576" />
+    <option name="x" value="1920" />
+    <option name="y" value="25" />
+    <option name="width" value="1920" />
+    <option name="height" value="1055" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -91,22 +95,12 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="Threshold-Behavior-Stochastic-Vector-Host" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Threshold-Behavior-Stochastic-Vector-Host" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
+      <pane id="ProjectPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$/stochastic_vector_host_model_vector_normalized.py" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -319,21 +313,22 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="31" width="1920" height="1049" extended-state="6" />
+    <frame x="1920" y="25" width="1920" height="1055" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48064086" visible="true" weight="0.1485623" />
-      <window_info id="Structure" order="1" sideWeight="0.5193592" side_tool="true" visible="true" weight="0.1485623" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.47900465" visible="true" weight="0.10298826" />
+      <window_info id="Structure" order="1" sideWeight="0.5209953" side_tool="true" visible="true" weight="0.10298826" />
       <window_info id="Favorites" order="2" sideWeight="0.5016129" side_tool="true" weight="0.11366062" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.5511182" visible="true" weight="0.30718955" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.5506937" visible="true" weight="0.30711207" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49786553" weight="0.39870688" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.43062967" weight="0.3286638" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.48615548" visible="true" weight="0.18409586" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5138445" side_tool="true" visible="true" weight="0.18409586" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.4855923" weight="0.18426724" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.4493063" side_tool="true" visible="true" weight="0.30711207" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49627262" weight="0.3278867" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -442,15 +437,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/stochastic_vector_host_model_vector_normalized.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="51" column="26" selection-start-line="51" selection-start-column="26" selection-end-line="51" selection-end-column="26" />
+        <state relative-caret-position="260">
+          <caret line="159" column="57" selection-start-line="159" selection-start-column="57" selection-end-line="159" selection-end-column="57" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/stochastic_vector_host_r_zero_extinctionPy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="51" lean-forward="true" selection-start-line="13" selection-start-column="51" selection-end-line="13" selection-end-column="51" />
+        <state relative-caret-position="331">
+          <caret line="24" column="25" lean-forward="true" selection-start-line="24" selection-start-column="25" selection-end-line="24" selection-end-column="25" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
