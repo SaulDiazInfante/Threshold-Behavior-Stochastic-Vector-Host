@@ -183,12 +183,12 @@ class StochasticVectorHostDynamics(object):
         print"\t----------------------"
         if cond_e1:
             print "\t (E-1): =)"
-            print ('\t\t [beta_v n_v + n_v_inf, beta_h n_h + n_h_inf] = ['
+            print ('\t\t [beta_v n_v + mu_v, beta_h n_h + mu_h] = ['
                    '%5.8f, %5.8f]'
                    % (beta_v * n_v_inf + mu_v, beta_h * n_h_inf + mu_h))
         else:
             print "\t (E-1): =("
-            print ('\t\t [beta_v n_v + n_v_inf, beta_h n_h + n_h_inf] = ['
+            print ('\t\t [beta_v n_v + mu_v, beta_h n_h + mu_h] = ['
                    '%5.8f, %5.8f]'
                    % (beta_v * n_v_inf + mu_v, beta_h * n_h_inf + mu_h))
 

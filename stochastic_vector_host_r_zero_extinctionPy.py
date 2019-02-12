@@ -9,10 +9,10 @@ p = 1
 r = p
 T0 = 0.0
 T = 600
-scale = 1.0e-1
+scale = 1.0e-2
 #
-sigma_v = 1.0 * scale  # Vector noise intensity
-sigma_h = 1.0 * scale  # Host noise intensity
+sigma_v = 4.0 * scale  # Vector noise intensity
+sigma_h = 8.0 * scale  # Host noise intensity
 lambda_h = 114.286  # Whole host population
 lambda_v = 21000.0  # Vector birth rate
 
@@ -23,7 +23,7 @@ x_zero = np.array([2000.0, 1.0, 3500.0, 150.0])
 n_v = lambda_v / mu_v
 n_h = lambda_h / mu_h
 
-beta_v = mu_v / n_v
+beta_v = 0.25 * mu_v / n_v
 beta_h = 6.0 * mu_h / n_h
 
 svh = NumericsStochasticVectorHostDynamics()
