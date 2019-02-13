@@ -226,7 +226,7 @@ class StochasticVectorHostDynamics(object):
             The diffusion term.
         """
         n_v = self.lambda_v / self.mu_v
-        n_h = self.x_zero[2] + self.x_zero[3]
+        n_h = self.lambda_h / self.mu_h
         sigma_v = self.sigma_v
         sigma_h = self.sigma_h
 

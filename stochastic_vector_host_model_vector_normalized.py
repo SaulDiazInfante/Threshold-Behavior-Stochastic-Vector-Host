@@ -130,15 +130,9 @@ class StochasticVectorHostDynamics(object):
         # Reproductive numbers
         deterministic_r_zero = (beta_v * beta_h * n_v_inf * n_h_inf) / \
                                (mu_v * mu_h)
-        # sigma_aster = (sigma_v ** 2 + sigma_h ** 2) / (mu_v * mu_h)
-        """
-        sigma_aster = \
-            ((1.0 - mu_h / (beta_v * n_v_inf) * sigma_v) ** 2
-             +
-             (1.0 - mu_h / (beta_v * n_v_inf) * sigma_h) ** 2) \
-            / (2.0 * mu_v * mu_h)
-        """
-        sigma_aster = ((a / b) * sigma_v) ** 2 + ((b / a) * sigma_h) ** 2
+        sigma_aster = ((a / b - mu_v / (beta_v * n_v_inf)) * sigma_v) ** 2 \
+                      + \
+                      ((b / a - mu_h / (beta_h * n_h_inf)) * sigma_h) ** 2
         stochastic_r_zero = deterministic_r_zero - 0.5 * sigma_aster
         aux_1 = np.sqrt((beta_v * n_v_inf) ** 2 / (2 * mu_v))
         aux_2 = np.sqrt((beta_h * n_h_inf) ** 2 / (2 * mu_h))

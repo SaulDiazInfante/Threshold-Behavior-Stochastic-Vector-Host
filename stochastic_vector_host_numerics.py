@@ -36,8 +36,8 @@ from matplotlib import rcParams
 from scipy.integrate import ode
 # from scipy.integrate import odeint
 
-rcParams['font.family'] = 'sans-serif'
-rcParams['font.sans-serif'] = ['DejaVu']
+# rcParams['font.family'] = 'sans-serif'
+# rcParams['font.sans-serif'] = ['DejaVu']
 params = {
     'figure.titlesize': 10,
     'axes.titlesize': 10,
@@ -411,21 +411,21 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             yj = self.x_sto[j, 1]
             zj = self.x_sto[j, 2]
             wj = self.x_sto[j, 3]
-            nvj = xj + yj
-            a1 = - (beta_v * wj / nvj + mu_v)
+
+            a1 = - (beta_v * wj + mu_v)
             b1 = lambda_v
             x = np.exp(h * a1) * xj + phi(a1, b1)
 
-            a2 = beta_v * xj * wj / (nvj * yj) - mu_v
-            b2 = 0.0
+            a2 = - mu_v
+            b2 = beta_v * xj * wj
             y = np.exp(a2 * h) * yj + phi(a2, b2)
 
-            a3 = - (beta_h * yj / nvj + mu_h)
+            a3 = - (beta_h * yj + mu_h)
             b3 = lambda_h
             z = np.exp(a3 * h) * zj + phi(a3, b3)
 
             a4 = - mu_h
-            b4 = beta_h * yj * zj / nvj
+            b4 = beta_h * yj * zj
             w = np.exp(a4 * h) * wj + phi(a4, b4)
 
             drift_increment = np.array([[x], [y], [z], [w]])
@@ -474,21 +474,20 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             zj = self.x_det[j, 2]
             wj = self.x_det[j, 3]
 
-            nvj = xj + yj
-            a1 = - (beta_v * wj / nvj + mu_v)
+            a1 = - (beta_v * wj + mu_v)
             b1 = lambda_v
             x = np.exp(h * a1) * xj + phi(a1, b1)
 
-            a2 = beta_v * xj * wj / (nvj * yj) - mu_v
-            b2 = 0.0
+            a2 = - mu_v
+            b2 = beta_v * xj * wj
             y = np.exp(a2 * h) * yj + phi(a2, b2)
 
-            a3 = - (beta_h * yj / nvj + mu_h)
+            a3 = - (beta_h * yj + mu_h)
             b3 = lambda_h
             z = np.exp(a3 * h) * zj + phi(a3, b3)
 
             a4 = - mu_h
-            b4 = beta_h * yj * zj / nvj
+            b4 = beta_h * yj * zj
             w = np.exp(a4 * h) * wj + phi(a4, b4)
 
             st_k = np.array([x, y, z, w])
