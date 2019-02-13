@@ -128,12 +128,17 @@ class StochasticVectorHostDynamics(object):
         b = (beta_h * n_h_inf + mu_h) / (mu_v * mu_h)
 
         # Reproductive numbers
-        deterministic_r_zero = (beta_v * beta_h * n_v_inf * n_h_inf) / \
-                               (mu_v * mu_h)
-        sigma_aster = ((a / b - mu_v / (beta_v * n_v_inf)) * sigma_v) ** 2 \
-                      + \
-                      ((b / a - mu_h / (beta_h * n_h_inf)) * sigma_h) ** 2
-        stochastic_r_zero = deterministic_r_zero - 0.5 * sigma_aster
+        deterministic_r_zero = (beta_v * beta_h * n_v_inf * n_h_inf) / (
+                    mu_v * mu_h)
+        sigma_aster = (((a / b - mu_v / (beta_v * n_v_inf)) * sigma_v) ** 2
+                       +
+                       ((b / a - mu_h / (
+                                   beta_h * n_h_inf)) * sigma_h) ** 2) / (
+                                  mu_v * mu_h)
+        # type: float
+
+        stochastic_r_zero = deterministic_r_zero - 0.25 * sigma_aster
+
         aux_1 = np.sqrt((beta_v * n_v_inf) ** 2 / (2 * mu_v))
         aux_2 = np.sqrt((beta_h * n_h_inf) ** 2 / (2 * mu_h))
         aux_3 = sigma_v < aux_1 and sigma_h < aux_2
@@ -254,7 +259,7 @@ class StochasticVectorHostDynamics(object):
         """
             The diffusion term.
         """
-        n_h = self.x_zero[2] + self.x_zero[3]
+        # n_h = self.x_zero[2] + self.x_zero[3]
         sigma_v = self.sigma_v
         sigma_h = self.sigma_h
 
@@ -262,12 +267,14 @@ class StochasticVectorHostDynamics(object):
         i_v = x_in[1]
         s_h = x_in[2]
         i_h = x_in[3]
-        n_v = s_v + i_v
+
+        n_v = self.lambda_v / self.mu_v
+        n_h = self.lambda_h / self.mu_h
 
         x1 = - sigma_v * s_v * i_h / n_v
         x2 = sigma_v * s_v * i_h / n_v
-        x3 = - sigma_h * s_h * i_v / n_v
-        x4 = sigma_h * s_h * i_v / n_v
+        x3 = - sigma_h * s_h * i_v / n_h
+        x4 = sigma_h * s_h * i_v / n_h
 
         bb = np.zeros([4, 4], dtype=np.float128)
         bb[0, 0] = x1

@@ -11,8 +11,8 @@ T0 = 0.0
 T = 600
 scale = 1.0e-2
 #
-sigma_v = 1.0 * scale  # Vector noise intensity
-sigma_h = 9.05 * scale  # Host noise intensity
+sigma_v = .5 * scale  # Vector noise intensity
+sigma_h = 2.0 * scale  # Host noise intensity
 lambda_h = 114.286  # Whole host population
 lambda_v = 21000.0  # Vector birth rate
 
@@ -33,13 +33,14 @@ svh.load_parameters(file_name)
 svh.set_parameters_stochastic_vector_host_dynamics(mu_v, beta_v, lambda_v,
                                                    mu_h, beta_h, lambda_h,
                                                    sigma_v, sigma_h, x_zero)
-
+# """
 x_det = svh.deterministic_linear_steklov()
 xst = svh.linear_steklov()
 currentDT = datetime.datetime.now()
 postfix_time = currentDT.strftime("%Y-%m-%d-%H:%M:%S")
 file_name = 'r_zero_figure' + postfix_time + '.png'
 svh.plotting(file_name)
+#"""
 
 t = svh.t
 tk = svh.dt * svh.tau
