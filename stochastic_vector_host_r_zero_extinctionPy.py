@@ -8,23 +8,23 @@ k = 6
 p = 1
 r = p
 T0 = 0.0
-T = 100
-alpha = 12.0
+T = 600
+alpha = 6810.0e-6
 #
-sigma_v = 0.0853  # Vector noise intensity
-sigma_h = 0.18  # Host noise intensity
+sigma_v = .0059  # Vector noise intensity
+sigma_h = 2.5315922  # Host noise intensity
 lambda_h = 114.286  # Whole host population
 lambda_v = 21000.0  # Vector birth rate
 
 mu_v = 2.1  # Vector mortality rate
 mu_h = 1.0 / 70.0  # Host mortality rate
-x_zero = np.array([900.0, 90, 700, 1.0])
+x_zero = np.array([900.0, 90, 650, 50.0])
 
 n_v_inf = lambda_v / mu_v
 n_h_inf = lambda_h / mu_h
-eps = 1.50
-beta_v = mu_v / (alpha * n_v_inf)
-beta_h = (mu_v / alpha * (1.0 + 1.0 / alpha) - mu_h) / n_h_inf
+#
+beta_h = 1.188888999 * mu_h / (alpha * n_h_inf)
+beta_v = (mu_h * (1.0 + 1.0 / alpha) - mu_v) / n_v_inf
 
 svh = NumericsStochasticVectorHostDynamics()
 svh.initialize_mesh(k, p, r, T0, T)
@@ -43,10 +43,12 @@ svh.plotting(file_name)
 """
 t = svh.t
 tk = svh.dt * svh.tau
-# r_zero = svh.r_zero()
 svh.extinction_conditions()
 # svh.save_parameters()
 # svh.load_parameters(file_name)
+# r_zero = svh.r_zero()
+#
+#
 a = (beta_h * n_h_inf + mu_h) / (2 * mu_v * mu_h)
 b = (beta_v * n_v_inf + mu_v) / (2 * mu_v * mu_h)
 # Reproductive numbers

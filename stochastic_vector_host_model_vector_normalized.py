@@ -139,7 +139,7 @@ class StochasticVectorHostDynamics(object):
                       / (mu_v * mu_h)
 
         #
-        stochastic_r_zero = deterministic_r_zero - 0.25 * sigma_aster
+        stochastic_r_zero = deterministic_r_zero - 0.5 * sigma_aster
 
         aux_1 = np.sqrt((beta_v * n_v_inf) ** 2 / (2 * mu_v))
         aux_2 = np.sqrt((beta_h * n_h_inf) ** 2 / (2 * mu_h))
@@ -359,7 +359,7 @@ class StochasticVectorHostDynamics(object):
             'n_h_inf': n_h,
             'r_zero_s': r_zero_s,
             'r_zero_d': r_zero_d
-            }
+        }
         #
         str_time = str(datetime.datetime.now())
         file_name = file_name_prefix + str_time + '.yml'
