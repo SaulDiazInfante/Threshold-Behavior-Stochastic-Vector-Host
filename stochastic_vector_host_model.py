@@ -303,8 +303,8 @@ class StochasticVectorHostDynamics(object):
             'i_v0':     i_v0,
             's_h0':     s_h0,
             'i_h0':     i_h0,
-            'n_v':      n_v,
-            'n_h':      n_h,
+            'n_v_inf': n_v,
+            'n_h_inf': n_h,
             'r_zero_s': r_zero_s,
             'r_zero_d': r_zero_d
         }

@@ -136,7 +136,7 @@ class StochasticVectorHostDynamics(object):
         x1 = lambda_v - beta_v * s_v * i_h / n_h - mu_v * s_v
         x2 = beta_v * s_v * i_h / n_h - mu_v * i_v
         x3 = lambda_h - beta_h * s_h * i_v / n_v - mu_h * s_h
-        # x3 = mu_h * n_h - beta_h * s_h * i_v / n_v - mu_h * s_h
+        # x3 = mu_h * n_h_inf - beta_h * s_h * i_v / n_v_inf - mu_h * s_h
         x4 = beta_h * s_h * i_v / n_v - mu_h * i_h
 
         r = np.array([[x1], [x2], [x3], [x4]])
