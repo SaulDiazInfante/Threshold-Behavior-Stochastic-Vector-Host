@@ -80,8 +80,8 @@ class StochasticVectorHostDynamics(object):
         sigma_v = self.sigma_v
         sigma_h = self.sigma_h
         deterministic_r_zero = (beta_v * beta_h * n_v * n_h) / (mu_v * mu_h)
-        stochastic_r_zero = deterministic_r_zero - 0.5 * (sigma_v ** 2
-                                                          + sigma_h ** 2)
+        stochastic_r_zero = deterministic_r_zero - (sigma_v ** 2
+                                                    + sigma_h ** 2)
         self.deterministic_r_zero = deterministic_r_zero
         self.stochastic_r_zero = stochastic_r_zero
 
@@ -130,17 +130,16 @@ class StochasticVectorHostDynamics(object):
         #
         # Reproductive numbers
         #
-        deterministic_r_zero = (beta_v * beta_h * n_v_inf * n_h_inf) / \
-                               (mu_v * mu_h)
+        deterministic_r_zero = (beta_v * beta_h * n_v_inf * n_h_inf) \
+                               / (mu_v * mu_h)
         sigma_aster = (((a / b - mu_h / (beta_v * n_v_inf)) * sigma_v) ** 2
                        +
-                       ((b / a - mu_v / (
-                               beta_h * n_h_inf)) * sigma_h) ** 2) \
+                       ((b / a - mu_v / (beta_h * n_h_inf)) * sigma_h) ** 2) \
                       / (mu_v * mu_h)
-
         #
-        stochastic_r_zero = deterministic_r_zero - 0.5 * sigma_aster
-
+        #
+        stochastic_r_zero = deterministic_r_zero - 0.25 * sigma_aster
+        #
         aux_1 = np.sqrt((beta_v * n_v_inf) ** 2 / (2 * mu_v))
         aux_2 = np.sqrt((beta_h * n_h_inf) ** 2 / (2 * mu_h))
         aux_3 = sigma_v < aux_1 and sigma_h < aux_2
