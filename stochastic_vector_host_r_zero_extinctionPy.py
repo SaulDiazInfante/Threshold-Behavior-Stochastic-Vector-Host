@@ -10,14 +10,14 @@ r = p
 T0 = 0.0
 T = 600
 #
-sigma_v = 0.5123  # Vector noise intensity
-sigma_h = 0.11  # Host noise intensity
+sigma_v = 1.01227223  # Vector noise intensity
+sigma_h = 1.019  # Host noise intensity
 lambda_h = 114.286  # Whole host population
 lambda_v = 21000.0  # Vector birth rate
 #
 mu_v = 2.1  # Vector mortality rate
 mu_h = 1.0 / 70.0  # Host mortality rate
-alpha = 1.8
+alpha = 1.05
 alpha_hat = mu_v / mu_h
 #
 x_zero = np.array([900.0, 90, 650, 50.0])

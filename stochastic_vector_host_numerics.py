@@ -27,7 +27,7 @@
        \end{aligned}
     \end{equation}
 """
-from stochastic_vector_host_model_vector_normalized import \
+from stochastic_vector_host_model_host_normalized import \
     StochasticVectorHostDynamics
 import numpy as np
 import matplotlib.pyplot as plt
