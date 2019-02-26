@@ -10,23 +10,24 @@ r = p
 T0 = 0.0
 T = 600
 #
-sigma_v = 1.01227223  # Vector noise intensity
-sigma_h = 1.019  # Host noise intensity
+scale = 1.20e-2
+sigma_v = 1.0 * scale  # Vector noise intensity
+sigma_h = 1.0 * scale  # Host noise intensity
 lambda_h = 114.286  # Whole host population
-lambda_v = 21000.0  # Vector birth rate
+lambda_v = 210000.0  # Vector birth rate
 #
 mu_v = 2.1  # Vector mortality rate
 mu_h = 1.0 / 70.0  # Host mortality rate
-alpha = 1.05
-alpha_hat = mu_v / mu_h
+
 #
-x_zero = np.array([900.0, 90, 650, 50.0])
+x_zero = np.array([100000.0, 90, 50, 1.0])
 
 n_v_inf = lambda_v / mu_v
-n_h_inf = lambda_h / mu_h
+n_h_inf = x_zero[2] + x_zero[3]
 #
-beta_h = alpha * mu_h / n_h_inf
-beta_v = mu_v / n_v_inf
+eps = 1.5e-3
+beta_h = mu_h + eps
+beta_v = mu_v * n_h_inf / n_v_inf
 
 svh = NumericsStochasticVectorHostDynamics()
 svh.initialize_mesh(k, p, r, T0, T)
