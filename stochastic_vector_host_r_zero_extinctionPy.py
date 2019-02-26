@@ -5,10 +5,10 @@ from stochastic_vector_host_numerics import \
     NumericsStochasticVectorHostDynamics
 
 k = 6
-p = 1
+p = 0
 r = p
 T0 = 0.0
-T = 60
+T = 6
 #
 scale = 1.20e-2
 sigma_v = 1.0 * scale  # Vector noise intensity
