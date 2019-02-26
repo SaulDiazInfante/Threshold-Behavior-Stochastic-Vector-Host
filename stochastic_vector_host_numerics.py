@@ -34,6 +34,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import fsolve
 from matplotlib import rcParams
 from scipy.integrate import ode
+
 # from scipy.integrate import odeint
 
 # rcParams['font.family'] = 'sans-serif'
@@ -389,10 +390,12 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         beta_h = self.beta_h
         lambda_v = self.lambda_v
         lambda_h = self.lambda_h
+        sigma_v = self.sigma_v
+        sigma_h = self.sigma_h
         mu_v = self.mu_v
         mu_h = self.mu_h
         n_h_inf = self.x_zero[2] + self.x_zero[3]
-
+        n_v_inf = lambda_v / mu_v
         eps = np.finfo(float).eps
         self.x_sto[0] = self.x_zero
 
@@ -439,9 +442,17 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             sign_st_k_vector = sign_st_k[0: 2]
             sign_st_k_host = sign_st_k[2: 4]
             if any(sign_st_k_vector):
-                st_k[0: 2] = drift_increment[0: 2] - winner_increment[0: 2]
+                r_v = 0.0  # np.sqrt(h) * np.abs(np.random.normal())
+                st_k[0] = n_v_inf - sigma_v / n_h_inf * xj * wj * r_v
+                st_k[1] = sigma_v / n_h_inf * xj * wj * r_v
+                # drift_increment[0: 2] \
+                # - * winner_increment[0: 2]
             if any(sign_st_k_host):
-                st_k[2: 4] = drift_increment[2: 4] - winner_increment[2: 4]
+                r_v = 0.0  # np.sqrt(h) * np.abs(p.random.normal())
+                st_k[2] = n_h_inf - sigma_h / n_h_inf * zj * yj * r_v
+                st_k[3] = sigma_h / n_h_inf * zj * yj * r_v
+                # drift_increment[2: 4] \
+                # - * winner_increment[2: 4]
             self.x_sto[j + 1] = np.reshape(st_k, 4)
         x_sto = self.x_sto
         return x_sto

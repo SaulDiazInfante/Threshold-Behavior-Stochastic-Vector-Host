@@ -1,18 +1,17 @@
 import numpy as np
 import datetime
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from stochastic_vector_host_numerics import \
     NumericsStochasticVectorHostDynamics
 
 k = 6
-p = 2
+p = 2.0
 r = p
 T0 = 0.0
-T = 1000
+T = 10
 #
-scale = 1.20e-2
-sigma_v = 0.0064  # Vector noise intensity
-sigma_h = 0.0100  # Host noise intensity
+sigma_v = 1.5  # Vector noise intensity
+sigma_h = 0.01300  # Host noise intensity
 lambda_h = 114.286  # Whole host population
 lambda_v = 2100.0  # Vector birth rate
 #
@@ -20,7 +19,7 @@ mu_v = 2.1  # Vector mortality rate
 mu_h = 1.0 / 70.0  # Host mortality rate
 
 #
-x_zero = np.array([1000.0, 500.0, 800, 100.0])
+x_zero = np.array([800.0, 2.0, 100, 1.0])
 
 n_v_inf = lambda_v / mu_v
 n_h_inf = x_zero[2] + x_zero[3]
