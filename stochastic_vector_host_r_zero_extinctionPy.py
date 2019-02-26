@@ -8,7 +8,7 @@ k = 6
 p = 1
 r = p
 T0 = 0.0
-T = 600
+T = 60
 #
 scale = 1.20e-2
 sigma_v = 1.0 * scale  # Vector noise intensity
@@ -36,14 +36,13 @@ svh.load_parameters(file_name)
 svh.set_parameters_stochastic_vector_host_dynamics(mu_v, beta_v, lambda_v,
                                                    mu_h, beta_h, lambda_h,
                                                    sigma_v, sigma_h, x_zero)
-"""
+
 x_det = svh.deterministic_linear_steklov()
 xst = svh.linear_steklov()
 currentDT = datetime.datetime.now()
 postfix_time = currentDT.strftime("%Y-%m-%d-%H:%M:%S")
 file_name = 'r_zero_figure' + postfix_time + '.png'
 svh.plotting(file_name)
-"""
 t = svh.t
 tk = svh.dt * svh.tau
 svh.extinction_conditions()

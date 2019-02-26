@@ -391,6 +391,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         lambda_h = self.lambda_h
         mu_v = self.mu_v
         mu_h = self.mu_h
+        n_h_inf = self.x_zero[2] + self.x_zero[3]
 
         eps = np.finfo(float).eps
         self.x_sto[0] = self.x_zero
@@ -412,20 +413,20 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             zj = self.x_sto[j, 2]
             wj = self.x_sto[j, 3]
 
-            a1 = - (beta_v * wj + mu_v)
+            a1 = - (beta_v * wj / n_h_inf + mu_v)
             b1 = lambda_v
             x = np.exp(h * a1) * xj + phi(a1, b1)
 
             a2 = - mu_v
-            b2 = beta_v * xj * wj
+            b2 = beta_v * xj * wj / n_h_inf
             y = np.exp(a2 * h) * yj + phi(a2, b2)
 
-            a3 = - (beta_h * yj + mu_h)
-            b3 = lambda_h
+            a3 = - (beta_h * yj / n_h_inf + mu_h)
+            b3 = mu_h * n_h_inf
             z = np.exp(a3 * h) * zj + phi(a3, b3)
 
             a4 = - mu_h
-            b4 = beta_h * yj * zj
+            b4 = beta_h * yj * zj / n_h_inf
             w = np.exp(a4 * h) * wj + phi(a4, b4)
 
             drift_increment = np.array([[x], [y], [z], [w]])
@@ -452,11 +453,11 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
 
         beta_v = self.beta_v
         beta_h = self.beta_h
-        lambda_v = self.lambda_v
-        lambda_h = self.lambda_h
         mu_v = self.mu_v
         mu_h = self.mu_h
-
+        lambda_v = self.lambda_v
+        n_h_inf = self.x_zero[2] + self.x_zero[3]
+        lambda_h = mu_h * n_h_inf
         eps = np.finfo(np.float64).eps
         self.x_det[0] = self.x_zero
 
@@ -474,20 +475,20 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             zj = self.x_det[j, 2]
             wj = self.x_det[j, 3]
 
-            a1 = - (beta_v * wj + mu_v)
+            a1 = - (beta_v * wj / n_h_inf + mu_v)
             b1 = lambda_v
             x = np.exp(h * a1) * xj + phi(a1, b1)
 
             a2 = - mu_v
-            b2 = beta_v * xj * wj
+            b2 = beta_v * xj * wj / n_h_inf
             y = np.exp(a2 * h) * yj + phi(a2, b2)
 
-            a3 = - (beta_h * yj + mu_h)
+            a3 = - (beta_h * yj / n_h_inf + mu_h)
             b3 = lambda_h
             z = np.exp(a3 * h) * zj + phi(a3, b3)
 
             a4 = - mu_h
-            b4 = beta_h * yj * zj
+            b4 = beta_h * yj * zj / n_h_inf
             w = np.exp(a4 * h) * wj + phi(a4, b4)
 
             st_k = np.array([x, y, z, w])
@@ -675,10 +676,11 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         #
         # stochastic plot
         #
+        alpha_sto = 0.4
         ax_sv.plot(t_k, x_sto[:, 0],
                    color=sto_color,
                    marker='.',
-                   alpha=0.04,
+                   alpha=alpha_sto,
                    lw=1,
                    ls='-',
                    ms=3,
@@ -690,7 +692,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         ax_iv.plot(t_k, x_sto[:, 1],
                    color=sto_color,
                    marker='.',
-                   alpha=0.04,
+                   alpha=alpha_sto,
                    lw=1,
                    ls='-',
                    ms=2,
@@ -701,7 +703,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         ax_nv.plot(t_k, sto_vector_cl,
                    color=sto_color,
                    marker='.',
-                   alpha=0.04,
+                   alpha=alpha_sto,
                    lw=1,
                    ls='-',
                    ms=2,
@@ -713,7 +715,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         ax_sh.plot(t_k, x_sto[:, 2],
                    color=sto_color,
                    marker='.',
-                   alpha=0.04,
+                   alpha=alpha_sto,
                    lw=1,
                    ls='-',
                    ms=2,
@@ -724,7 +726,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         ax_ih.plot(t_k, x_sto[:, 3],
                    color=sto_color,
                    marker='.',
-                   alpha=0.04,
+                   alpha=alpha_sto,
                    lw=1,
                    ls='-',
                    ms=2,
@@ -735,7 +737,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
         ax_nh.plot(t_k, x_sto[:, 2] + x_sto[:, 3],
                    color=sto_color,
                    marker='.',
-                   alpha=0.04,
+                   alpha=alpha_sto,
                    lw=1,
                    ls='-',
                    ms=2,
@@ -748,7 +750,7 @@ class NumericsStochasticVectorHostDynamics(StochasticVectorHostDynamics):
             loc=0,
             ncol=2,
             numpoints=1,
-            borderaxespad=0.04
+            borderaxespad=alpha_sto
             )
         plt.tight_layout()
         plt.savefig(file_name)

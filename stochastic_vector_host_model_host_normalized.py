@@ -221,11 +221,10 @@ class StochasticVectorHostDynamics(object):
         lambda_v = self.lambda_v
         self.lambda_h = mu_h * n_h_inf
         beta_h = self.beta_h
-
-        n_v_inf = s_v + i_v
+        #
         n_h_inf = s_h + i_h
-        infection_force_v = beta_v / n_v_inf * s_v * i_h
-        infection_force_h = beta_h / n_v_inf * s_h * i_v
+        infection_force_v = beta_v / n_h_inf * s_v * i_h
+        infection_force_h = beta_h / n_h_inf * s_h * i_v
 
         x1 = lambda_v - infection_force_v - mu_v * s_v
         x2 = infection_force_v - mu_v * i_v
@@ -249,11 +248,11 @@ class StochasticVectorHostDynamics(object):
         s_h = x_in[2]
         i_h = x_in[3]
 
-        n_v_inf = self.lambda_v / self.mu_v
-        n_h_inf = self.lambda_h / self.mu_h
+        # n_v_inf = self.lambda_v / self.mu_v
+        n_h_inf = s_h + i_h
 
-        x1 = - sigma_v * s_v * i_h / n_v_inf
-        x2 = sigma_v * s_v * i_h / n_v_inf
+        x1 = - sigma_v * s_v * i_h / n_h_inf
+        x2 = sigma_v * s_v * i_h / n_h_inf
         x3 = - sigma_h * s_h * i_v / n_h_inf
         x4 = sigma_h * s_h * i_v / n_h_inf
 
@@ -272,13 +271,14 @@ class StochasticVectorHostDynamics(object):
         #
         s_v = x_in[0]
         i_v = x_in[1]
+        s_h = x_in[2]
         i_h = x_in[3]
         #
 
-        n_v_inf = s_v + i_v
+        n_h_inf = s_h + i_h
 
-        x1 = - sigma_v * i_h / n_v_inf
-        x3 = - sigma_h * i_v / n_v_inf
+        x1 = - sigma_v * i_h / n_h_inf
+        x3 = - sigma_h * i_v / n_h_inf
 
         bp = np.zeros([4, 4], dtype=np.float128)
         bp[0, 0] = x1
