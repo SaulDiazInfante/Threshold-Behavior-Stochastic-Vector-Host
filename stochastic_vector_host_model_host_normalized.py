@@ -249,7 +249,7 @@ class StochasticVectorHostDynamics(object):
         i_h = x_in[3]
 
         # n_v_inf = self.lambda_v / self.mu_v
-        n_h_inf = s_h + i_h
+        n_h_inf = self.x_zero[2] + self.x_zero[3]
 
         x1 = - sigma_v * s_v * i_h / n_h_inf
         x2 = sigma_v * s_v * i_h / n_h_inf
