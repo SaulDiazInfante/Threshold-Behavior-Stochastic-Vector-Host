@@ -132,19 +132,20 @@ class StochasticVectorHostDynamics(object):
         lambda_h = self.lambda_h
         n_v_inf = lambda_v / mu_v
         n_h_inf = self.x_zero[2] + self.x_zero[3]
+        c_v = 5.0
         sigma_v = self.sigma_v
         sigma_h = self.sigma_h
         #
         a_b = (beta_h + mu_h * n_h_inf) / (mu_v + beta_v * n_v_inf)
         b_a = a_b ** (-1)
-        sigma_aster = 0.25 * (mu_v * mu_h) ** (-1) * \
+        sigma_aster = 0.5 * (mu_v + mu_h) ** (-1) * \
                       ((sigma_v * (a_b * n_v_inf / n_h_inf - mu_h / beta_v))
                        ** 2
                        + (sigma_h * (b_a - mu_v / beta_h)) ** 2
                        )
 
         deterministic_r_zero = \
-            (beta_v * beta_h * n_v_inf) / (mu_v * mu_h * n_h_inf)
+            (beta_v * beta_h * c_v) / (mu_v * mu_h)
         stochastic_r_zero = deterministic_r_zero - sigma_aster
         #
         #
@@ -153,10 +154,9 @@ class StochasticVectorHostDynamics(object):
         cond_e1_b = b_a * beta_h > mu_v
         cond_e1 = cond_e1_a and cond_e1_b
 
-        aux_1 = np.sqrt(
-            2.0 * beta_v ** 2 * n_h_inf /
-            (2 * a_b * beta_v * n_v_inf - mu_h * n_h_inf)
-            )
+        aux_1 = \
+            np.sqrt(2.0 * beta_v ** 2 * n_h_inf /
+                    (2 * a_b * beta_v * n_v_inf - mu_h * n_h_inf))
         aux_2 = np.sqrt(
             2.0 * beta_h ** 2 /
             (2 * b_a * beta_h - mu_v))
